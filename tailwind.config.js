@@ -35,6 +35,7 @@ export default {
         },
         destructive: "rgb(var(--destructive))",
         "destructive-foreground": "rgb(var(--destructive-foreground))",
+        "surface-dark": "rgb(var(--surface-dark))",
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
