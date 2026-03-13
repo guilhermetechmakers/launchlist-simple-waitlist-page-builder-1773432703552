@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -41,7 +42,7 @@ export default function Login() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex flex-1 items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md animate-fade-in-up">
+        <Card className="w-full max-w-md animate-fade-in-up rounded-2xl border border-border bg-card shadow-card transition-shadow duration-200 hover:shadow-card-hover">
           <CardHeader>
             <CardTitle>Log in</CardTitle>
             <CardDescription>
@@ -51,6 +52,15 @@ export default function Login() {
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                {signIn.isError && (
+                  <div
+                    role="alert"
+                    className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+                  >
+                    <AlertCircle className="h-4 w-4 shrink-0" aria-hidden />
+                    <span>{signIn.error?.message ?? "Sign in failed. Please try again."}</span>
+                  </div>
+                )}
                 <FormField
                   control={form.control}
                   name="email"
@@ -58,7 +68,12 @@ export default function Login() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="you@example.com" {...field} />
+                        <Input
+                          type="email"
+                          placeholder="you@example.com"
+                          aria-label="Email address"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -71,7 +86,12 @@ export default function Login() {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="••••••••" {...field} />
+                        <Input
+                          type="password"
+                          placeholder="••••••••"
+                          aria-label="Password"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -80,7 +100,7 @@ export default function Login() {
                 <div className="flex items-center justify-between text-sm">
                   <Link
                     to="/forgot-password"
-                    className="text-primary hover:underline"
+                    className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 rounded-sm"
                   >
                     Forgot password?
                   </Link>
