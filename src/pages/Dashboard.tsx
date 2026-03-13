@@ -1,153 +1,189 @@
-import { Link } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Navbar } from "@/components/layout/Navbar";
-import { useProjects } from "@/hooks/useProjects";
-import { Plus, ExternalLink, List, MoreHorizontal } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useState } from "react";
-import type { ProjectWithCount } from "@/types/project";
+  DashboardLayout,
+  QuickFiltersBar,
+  ProjectsList,
+  EmptyState,
+} from "@/components/dashboard";
+import type { SortKey, VisibilityFilter } from "@/components/dashboard";
+import { useProjects } from "@/hooks/useProjects";
+import { useExportSubmissions } from "@/hooks/useSubmissions";
+import { safeFilter } from "@/lib/utils";
+import {
+  toDashboardProject,
+  type ProjectWithCount,
+  type DashboardProject,
+} from "@/types/project";
+
+const PAGE_SIZE = 12;
+const DEBOUNCE_MS = 300;
+
+function useDebouncedValue<T>(value: T, delayMs: number): T {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delayMs);
+    return () => clearTimeout(t);
+  }, [value, delayMs]);
+  return debounced;
+}
 
 export default function Dashboard() {
-  const { data: projects, isLoading } = useProjects();
-  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+  const [searchInput, setSearchInput] = useState("");
+  const debouncedSearch = useDebouncedValue(searchInput, DEBOUNCE_MS);
+  const [sortKey, setSortKey] = useState<SortKey>("recent_activity");
+  const [visibilityFilter, setVisibilityFilter] =
+    useState<VisibilityFilter>("all");
+  const [page, setPage] = useState(1);
+  const [exportingProjectId, setExportingProjectId] = useState<string | null>(
+    null
+  );
 
-  const filtered =
-    projects?.filter(
-      (p: ProjectWithCount) =>
-        !search ||
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.slug.toLowerCase().includes(search.toLowerCase())
-    ) ?? [];
+  const { data: projectsRaw, isLoading } = useProjects();
+  const exportMutation = useExportSubmissions();
+
+  const projects: DashboardProject[] = useMemo(() => {
+    const list = Array.isArray(projectsRaw) ? projectsRaw : (projectsRaw ?? []);
+    return list.map((p: ProjectWithCount) => toDashboardProject(p));
+  }, [projectsRaw]);
+
+  const filtered = useMemo(() => {
+    const bySearch = safeFilter(projects, (p) => {
+      if (!debouncedSearch.trim()) return true;
+      const q = debouncedSearch.toLowerCase();
+      const name = (p.name ?? "").toLowerCase();
+      const slug = (p.slug ?? "").toLowerCase();
+      return name.includes(q) || slug.includes(q);
+    });
+    const byVisibility = safeFilter(bySearch, (p) => {
+      if (visibilityFilter === "all") return true;
+      if (visibilityFilter === "public") return p.is_public === true;
+      return p.is_public === false;
+    });
+    const sorted = [...byVisibility].sort((a, b) => {
+      if (sortKey === "alphabetical") {
+        return (a.name ?? "").localeCompare(b.name ?? "");
+      }
+      if (sortKey === "recently_created") {
+        const ta = new Date(a.created_at ?? 0).getTime();
+        const tb = new Date(b.created_at ?? 0).getTime();
+        return tb - ta;
+      }
+      const ta = new Date(a.updated_at ?? a.created_at ?? 0).getTime();
+      const tb = new Date(b.updated_at ?? b.created_at ?? 0).getTime();
+      return tb - ta;
+    });
+    return sorted;
+  }, [projects, debouncedSearch, visibilityFilter, sortKey]);
+
+  const totalCount = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginated = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filtered.slice(start, start + PAGE_SIZE);
+  }, [filtered, currentPage]);
+
+  const handleExportForProject = useCallback(
+    (projectId: string) => {
+      setExportingProjectId(projectId);
+      exportMutation.mutate(
+        { projectId },
+        {
+          onSettled: () => setExportingProjectId(null),
+        }
+      );
+    },
+    [exportMutation]
+  );
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
-      <main className="flex-1 px-4 py-8 md:px-6">
-        <div className="mx-auto max-w-[1200px]">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-            <h1 className="font-heading text-3xl font-bold text-foreground">
-              Your waitlists
-            </h1>
-            <Button asChild>
-              <Link to="/setup">
-                <Plus className="mr-2 h-4 w-4" />
-                New waitlist
-              </Link>
-            </Button>
-          </div>
+    <DashboardLayout>
+      <QuickFiltersBar
+        searchQuery={searchInput}
+        sortKey={sortKey}
+        visibilityFilter={visibilityFilter}
+        onQueryChange={setSearchInput}
+        onSortChange={(k) => {
+          setSortKey(k);
+          setPage(1);
+        }}
+        onVisibilityChange={(v) => {
+          setVisibilityFilter(v);
+          setPage(1);
+        }}
+      />
 
-          <div className="mt-6">
-            <Input
-              placeholder="Search by name or slug…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="max-w-sm"
+      {(() => {
+        if (isLoading) {
+          return (
+            <ProjectsList
+              projects={[]}
+              isLoading
+              onExport={handleExportForProject}
             />
-          </div>
+          );
+        }
+        const list = paginated;
+        const hasProjects = (projects ?? []).length > 0;
+        const hasFiltered = list.length > 0;
 
-          {isLoading ? (
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {[1, 2, 3].map((i) => (
-                <Card key={i}>
-                  <CardHeader>
-                    <Skeleton className="h-6 w-3/4" />
-                    <Skeleton className="mt-2 h-4 w-full" />
-                  </CardHeader>
-                  <CardContent>
-                    <Skeleton className="h-10 w-full" />
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : filtered.length === 0 ? (
-            <Card className="mt-8 flex flex-col items-center justify-center py-16">
-              <List className="h-12 w-12 text-muted-foreground" />
-              <p className="mt-4 font-medium text-foreground">
-                {projects?.length === 0
-                  ? "No waitlists yet"
-                  : "No waitlists match your search"}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {projects?.length === 0
-                  ? "Create your first waitlist to start collecting signups."
-                  : "Try a different search."}
-              </p>
-              {projects?.length === 0 && (
-                <Button asChild className="mt-6">
-                  <Link to="/setup">Create waitlist</Link>
+        if (!hasFiltered) {
+          return (
+            <EmptyState
+              onCreate={() => navigate("/setup")}
+              hasProjects={hasProjects}
+            />
+          );
+        }
+
+        return (
+          <>
+            <ProjectsList
+              projects={list}
+              totalCount={totalCount}
+              isLoading={false}
+              onEdit={(id) => navigate(`/setup/${id}`)}
+              onViewSubmissions={(id) =>
+                navigate(`/project/${id}/submissions`)
+              }
+              onExport={handleExportForProject}
+              exportingProjectId={exportingProjectId}
+            />
+            {totalPages > 1 && (
+              <div
+                className="mt-8 flex items-center justify-center gap-2"
+                role="navigation"
+                aria-label="Pagination"
+              >
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage <= 1}
+                >
+                  Previous
                 </Button>
-              )}
-            </Card>
-          ) : (
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {filtered.map((project: ProjectWithCount) => (
-                <Card key={project.id} className="flex flex-col">
-                  <CardHeader className="flex flex-row items-start justify-between space-y-0">
-                    <div className="space-y-1.5">
-                      <h3 className="font-heading text-lg font-semibold text-foreground">
-                        {project.name}
-                      </h3>
-                      <p className="line-clamp-2 text-sm text-muted-foreground">
-                        {project.description || "No description"}
-                      </p>
-                    </div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
-                          <Link to={`/setup/${project.id}`}>Edit</Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to={`/project/${project.id}/submissions`}>
-                            View submissions
-                          </Link>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </CardHeader>
-                  <CardContent className="mt-auto space-y-3">
-                    <p className="text-sm text-muted-foreground">
-                      <span className="font-medium text-foreground">
-                        {project.waitlist_count ?? 0}
-                      </span>{" "}
-                      signups
-                    </p>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" asChild className="flex-1">
-                        <a
-                          href={`${window.location.origin}/r/${project.slug}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <ExternalLink className="mr-1 h-3 w-3" />
-                          View page
-                        </a>
-                      </Button>
-                      <Button variant="outline" size="sm" asChild>
-                        <Link to={`/project/${project.id}/submissions`}>
-                          Submissions
-                        </Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </div>
-      </main>
-    </div>
+                <span className="text-sm text-muted-foreground">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage >= totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </>
+        );
+      })()}
+    </DashboardLayout>
   );
 }

@@ -25,7 +25,7 @@ export default function Submissions() {
   const [to, setTo] = useState("");
   const { data: project, isLoading: projectLoading } = useProject(id);
   const { data: entries, isLoading: entriesLoading } = useSubmissions(id, from || undefined, to || undefined);
-  const exportCsv = useExportSubmissions(id ?? "");
+  const exportCsv = useExportSubmissions();
   const deleteEntry = useDeleteSubmission(id ?? "");
 
   if (projectLoading || !id) {
@@ -74,8 +74,8 @@ export default function Submissions() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => exportCsv.mutate({ from: from || undefined, to: to || undefined })}
-              disabled={exportCsv.isPending}
+              onClick={() => id && exportCsv.mutate({ projectId: id, from: from || undefined, to: to || undefined })}
+              disabled={exportCsv.isPending || !id}
             >
               <Download className="mr-2 h-4 w-4" />
               Export CSV

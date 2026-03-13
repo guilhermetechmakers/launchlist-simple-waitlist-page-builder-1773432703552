@@ -44,6 +44,14 @@ export default function App() {
             }
           />
           <Route
+            path="/projects"
+            element={
+              <AuthGuard>
+                <Dashboard />
+              </AuthGuard>
+            }
+          />
+          <Route
             path="/setup"
             element={
               <AuthGuard>

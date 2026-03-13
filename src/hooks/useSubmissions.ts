@@ -27,25 +27,37 @@ export function useSubmissions(projectId: string | undefined, from?: string, to?
   });
 }
 
-export function useExportSubmissions(projectId: string) {
+export interface ExportSubmissionsParams {
+  projectId: string;
+  from?: string;
+  to?: string;
+}
+
+export function useExportSubmissions(projectId?: string) {
   return useMutation({
-    mutationFn: async ({ from, to }: { from?: string; to?: string } = {}) => {
+    mutationFn: async ({
+      projectId: pid,
+      from,
+      to,
+    }: ExportSubmissionsParams) => {
+      const id = pid ?? projectId;
+      if (!id) throw new Error("Project ID required");
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.access_token) throw new Error("Not authenticated");
       const url = new URL(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/export-submissions`);
       if (from) url.searchParams.set("from", from);
       if (to) url.searchParams.set("to", to);
-      url.searchParams.set("project_id", projectId);
+      url.searchParams.set("project_id", id);
       const res = await fetch(url.toString(), {
         headers: { Authorization: `Bearer ${session.access_token}` },
       });
       if (!res.ok) throw new Error("Export failed");
-      return res.blob();
+      return { blob: await res.blob(), projectId: id };
     },
-    onSuccess: (blob) => {
+    onSuccess: ({ blob, projectId: id }) => {
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `waitlist-${projectId}.csv`;
+      a.download = `waitlist-${id}.csv`;
       a.click();
       URL.revokeObjectURL(a.href);
       toast.success("CSV downloaded");

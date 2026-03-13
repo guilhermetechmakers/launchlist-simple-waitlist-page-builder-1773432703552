@@ -326,246 +326,58 @@ All dashboard pages should be nested inside the dashboard layout, not separate r
 
 ## User Design Requirements
 
-# LaunchList - Development Blueprint
-
-## Project Concept
-LaunchList is an ultra‑simple SaaS that lets founders and makers create lightweight public waitlist landing pages to collect emails before launch. Purpose: enable rapid creation of a minimal landing page (headline, description, email capture, join counter) with tiny branding customization (logo, button color) and deliver core waitlist functionality: public link, email collection, owner notifications, and CSV export. Vision: a conversion‑focused, low‑friction product that founders can set up in under two minutes to validate demand with minimal cost and complexity.
-
-AI app description: a concise, developer-friendly blueprint for building LaunchList: pages, APIs, DB schema, UX flows, anti‑abuse, export, onboarding, and visual system for a modern micro‑SaaS.
-
-## Problem Statement
-- Core problems:
-  - Founders need a fast way to gather interest and emails before building full product pages.
-  - Existing tools are either overbuilt (complex landing builders) or underwhelming (no polish).
-  - Non‑technical creators need a frictionless setup and a credible public page to share.
-- Who experiences these problems:
-  - Indie founders, makers, freelancers, product teams, early adopters/marketers.
-- Why these problems matter:
-  - Early demand signals reduce risk, validate ideas, and help prioritize development and marketing.
-  - Time-to-first-share matters: friction reduces conversion and slows validation.
-- Current gaps without this solution:
-  - No immediate, focused product to create a quick, professional-looking waitlist page with email capture, owner alerts, and simple analytics/export.
-
-## Solution
-LaunchList provides a two-page workflow per project: a Setup (admin) page to create/manage a waitlist project and a Public Waitlist Page to collect emails. Lightweight DB, secure auth, image storage for logos, spam protections, and export capabilities. Approach: minimal UI, tight UX, fast setup, one-click publish, CDN friendly public pages, simple analytics (join counter), and export. Key differentiators: ultra-small scope with professional visual design, immediate public URL per project, owner notifications, CSV export, and developer-friendly architecture enabling fast shipping and low hosting cost. Value: speed of validation, low cognitive overhead, and a credible public presence.
-
-## Requirements
-
-### 1. Pages (UI Screens)
-- Landing Page (Marketing)
-  - Purpose: convert visitors into signups; describe product.
-  - Sections: hero, how-it-works (3 steps), features, pricing teaser, footer.
-  - Contribution: drives acquisition and activation.
-
-- Login / Signup
-  - Purpose: authenticate users.
-  - Sections: email, password, toggle sign up / log in, password reset link, benefits microcopy.
-  - Contribution: user access to create/manage projects.
-
-- Dashboard (Projects List)
-  - Purpose: list and manage user projects.
-  - Sections: top nav, create new waitlist CTA, project cards (title, desc, public URL, join count, quick actions), search/filter, empty state.
-  - Contribution: central management and quick creation.
-
-- Setup Page (Create / Edit Waitlist)
-  - Purpose: create or edit a waitlist project.
-  - Sections: form fields (product name, short description, recipient email, button color, logo upload), auto slug & URL preview, visibility toggle (public/private), live preview panel (desktop & mobile), Save/Publish button.
-  - Contribution: gathers config and publishes public page.
-
-- Public Waitlist Page
-  - Purpose: public-facing page for visitors to join the waitlist.
-  - Sections: hero (headline, description, optional logo), email input, join button, join counter, success state (message/modal), SEO/Open Graph metadata.
-  - Contribution: email capture and social proof.
-
-- View Submissions
-  - Purpose: review collected emails for a project.
-  - Sections: table/list (email, timestamp, referrer, meta), search & filters (date range), individual detail drawer, bulk actions (export CSV, mark processed, delete), simple analytics header.
-  - Contribution: enables follow-up and export.
-
-- Password Reset
-  - Purpose: secure password recovery.
-  - Sections: email request form, confirmation screen with sent notice, new password form (token).
-  - Contribution: account recovery and security.
-
-- User Profile
-  - Purpose: manage account settings.
-  - Sections: name, email (change w/ reverify), password change, notification prefs, account deletion.
-  - Contribution: user control and compliance.
-
-- Admin / Internal (optional)
-  - Purpose: admin moderation, project management.
-  - Sections: user/project search, suspend project, view logs.
-  - Contribution: abuse handling and support.
-
-### 2. Features
-- User Authentication
-  - Implement email/password with secure hashing (bcrypt/Argon2), session cookies (HttpOnly, Secure, SameSite), rate limiting, email verification.
-  - Optional future OAuth (Google).
-- Create & Manage Projects (CRUD)
-  - Projects table with name, description, recipient_email, slug, button_color (HEX), logo_url, is_public, owner_user_id, created_at, updated_at.
-  - Slug generation (friendly, unique), server-side validation, optimistic locking on edits.
-- Public Page Generation & Hosting
-  - Route: GET /r/:slug serves project content (SSR/cacheable).
-  - SEO and OG tags per project. CDN headers, short TTL for join counter.
-  - Static pre-generation optional for scaling.
-- Collect Emails (Submissions)
-  - Submissions table: id, project_id, email, ip_hash, user_agent, referrer, created_at.
-  - Input validation, sanitization, optional email hashing for privacy.
-  - Spam prevention: reCAPTCHA v3, IP throttling, rate limits per IP and per project.
-  - Transactional flow: write then notify owner.
-- Join Counter
-  - Lightweight counter derived from submissions count; cached with short TTL; soft real-time update via small polling/websocket optional.
-- Owner Notifications
-  - Send email notifications to project recipient_email on new submission.
-  - Use transactional provider (SendGrid/Postmark) with DKIM/SPF guidance.
-- Export Submissions (CSV)
-  - Server-generated CSV streaming, permission checks, date-range filters, export rate limit.
-- Branding Customization & Asset Storage
-  - Logo upload via signed direct upload to object storage (Supabase), validation (type, size), generate social preview image (OG) cached on storage CDN.
-- User Profile Management & Password Management
-  - Profile CRUD, password reset tokens stored hashed with expiry, invalidate sessions on password change.
-- Security & Anti‑abuse
-  - Rate limits, reCAPTCHA, IP throttling, email format validation, optional domain allowlist/blocklist, logging for suspicious activity.
-- Compliance & Privacy
-  - Data deletion per project owner request, GDPR considerations (data export/delete), privacy link on public pages.
-- Analytics & Simple Stats
-  - Display total joins, last joined timestamp on Dashboard and View Submissions header.
-- Accessibility
-  - Keyboard focus states, color contrast adherence, form labels, and ARIA where needed.
-
-### 3. User Journeys
-- New User (Signup → Create Waitlist → Publish → Share)
-  1. Visit Landing Page → Click Get started → Signup with email & password → Verify email.
-  2. Dashboard → Click Create new waitlist → Fill Setup form (name, description, recipient email, choose button color, optional logo).
-  3. System generates slug & preview; user clicks Save & Publish → Public URL displayed with copy/share buttons.
-  4. User shares public URL; visitors sign up via Public Waitlist Page.
-  5. Owner receives notification emails and views submissions in View Submissions; optionally export CSV.
-
-- Visitor (Join Waitlist)
-  1. Open public URL /r/:slug → View headline, description, email input.
-  2. Enter email → submit → client validates email → optionally reCAPTCHA → POST /api/r/:slug/join.
-  3. Server records submission, increments counter, sends owner notification, returns success message; client displays success state and share CTA.
-
-- Project Owner (Manage Submissions)
-  1. Login → Dashboard → Click project → View Submissions page.
-  2. Search/filter entries, click entry for details, bulk export CSV, mark processed or delete entries.
-  3. Edit Setup page to update branding or recipient email; changes invalidate cache and update public page.
-
-- Password Reset Flow
-  1. From Login, click Forgot password → enter email → server sends tokenized link.
-  2. User clicks link → set new password (validated) → server updates password, invalidates existing sessions.
-
-- Admin / Moderation (if enabled)
-  1. Admin logs in → searches project/user → suspend project or investigate flagged activity → take action (suspend, warn, delete).
-
-## UI Guide
-(Use this design system consistently across all pages and components. See Visual Style below for detailed specs.)
-
----
+- Neon CTA accents, two-column hero style in applicable pages, but this dashboard uses cards and compact lists with neon highlights for primary actions
+- Maintain the neon #D6FF2A for CTAs and badges; use coral #FF7A5A sparingly for secondary data highlights
+- Use dark hero and light surfaces where appropriate; dashboard surfaces should feel crisp on #F6F6F1
+- Consistent typography: headings in Poppins/Inter Display, body text in Inter or system UI; sizes per the design system
+- Spacing: adhere to 12–16px baseline grid, 24–32px spacing between blocks; ensure comfortable hit targets
 
 ## Visual Style
 
-### Color Palette:
-- Primary accent (neon call-to-action): #D6FF2A
-- Dark hero / feature panel: #1F2023
-- Off‑white page background: #F6F6F1
-- Card background / surfaces: #FFFFFF
-- Headline / primary text: #0B0B0B
-- Body / secondary text: #5B5B5B
-- Muted text / meta: #9AA0A6
-- Accent secondary / data color: #FF7A5A
-- Shadows / overlays: rgba(6,6,6,0.08) and rgba(0,0,0,0.06)
-- Interaction focus outline: rgba(214,255,42,0.18)
+The visual style remains consistent with the provided palette and design language:
+- Color Palette: neon CTAs, dark hero, off-white canvas, white cards, black headlines, gray body text, muted metadata, coral accents, soft shadows, neon focus rings
+- Typography: headings are bold and large; body text is clear and legible with recommended weights and sizes
+- Card Design: rounded surfaces, soft shadows, layered depth, hover states with subtle glow
+- Navigation: streamlined top navigation with a primary neon CTA
+- Data Visualization: minimal, with neon and coral accents for any charts in the dashboard or inline metrics
+- Interactive Elements: clear primary actions with neon emphasis, accessible focus rings, smooth micro-interactions
 
-### Typography & Layout:
-- Headings: Poppins or Inter Display (700–800). H1 scale 48–64px desktop.
-- Body: Inter or system UI (400–600), 15–18px, line height 1.4–1.6.
-- Grid: max width 1100–1300px, baseline 12–16px, vertical spacing 24–32px.
-- Hero: two-column layout (text left, visual preview right), rounded hero container radius 24–28px.
-- Alignment: left-aligned copy, asymmetrical whitespace.
+## Mandatory Coding Standards — Runtime Safety
 
-### Key Design Elements
-Card Design:
-- White cards, radii 12–20px, soft shadows, no strokes, hover lift translateY(-6px) and faint neon glow.
+CRITICAL: Follow these rules in ALL generated code to prevent runtime crashes.
 
-Navigation:
-- Minimal top nav, small logo left, links muted gray, primary neon CTA pill right. Mobile: hamburger; keep CTA visible.
+1. Supabase/query results
+   - Always use nullish coalescing: const items = data ?? []
+2. Array methods
+   - Never call on a possibly-null/undefined value:
+     - (items ?? []).map(...) or Array.isArray(items) ? items.map(...) : []
+3. React useState for arrays/objects
+   - Always initialize correctly: useState<Project[]>([]) for project lists
+4. API response shapes
+   - Validate responses: const list = Array.isArray(response?.data) ? response.data : []
+5. Optional chaining
+   - Use safe access: obj?.property?.nested
+6. Destructuring with defaults
+   - const { items = [], count = 0 } = response ?? {}
 
-Data Visualization:
-- Minimal lines, primary #D6FF2A, area fill rgba(214,255,42,0.06), axes muted.
+Connected Pages:
+- View Submissions: List and manage submissions for a selected waitlist project, including search, filter, export, and mark as processed
+- Setup Page (Create / Edit Waitlist): Minimal form for product name, short description, recipient email, button color, logo upload; live preview and public link generation
 
-Interactive Elements:
-- Primary buttons: pill shape, #D6FF2A fill, dark text #0B0B0B, padding 12–16px vertical × 20–28px horizontal.
-- Secondary buttons: white with neon border or neon text; invert on hover.
-- Inputs: rounded 8–12px radius, bg #F7F7F7, height 44–48px, placeholder #B9BDC1.
-- Micro-interactions: 120–200ms transitions; focus ring rgba(214,255,42,0.18).
+Connected Features:
+- Create & Manage Waitlist Projects (CRUD)
+- Export Submissions (CSV)
+- Collect Emails (Submissions)
 
-### Design Philosophy
-- Minimalist, focused UI; big whitespace and small choices to enable setup in <2 minutes.
-- Friendly + professional tone; conversion-first design.
-- Lightweight & fast feel; thin strokes and subtle micro-interactions.
+Instructions for AI Development Tool:
+- Implement with strict type safety (TypeScript preferred) and robust null checks
+- Structure components with clear props and minimal side effects
+- Provide thorough in-line comments explaining each safety guard and decision
+- Include unit tests for key data transformations and API response handling
+- Deliver a self-contained module set with API service layer, React components, and hooks
+- Include a minimal mock data layer for local development and a toggle to switch to real API endpoints
 
-Implementation Notes:
-- Apply the design system consistently; ensure accessibility and high contrast for CTAs.
-
-## Instructions to AI Development Tool
-1. Refer to Project Concept, Problem Statement, and Solution for the "why" behind features.
-2. Build pages and features to directly solve the identified problems; prioritize Setup and Public Waitlist flows.
-3. Verify features match specifications before completing each task (auth, project CRUD, submissions, export, branding storage).
-4. Enforce the UI Guide and Visual Style exactly for consistent visuals and interactions.
-5. Maintain security, rate limits, spam prevention, and privacy compliance (GDPR) across endpoints and storage.
-
-PROJECT CONTEXT
-- Project: LaunchList — Simple Waitlist Page Builder
-- Scope highlights:
-  - Two primary pages per project: Setup and Public Waitlist.
-  - DB: projects, waitlist_entries (submissions).
-  - Storage: Supabase object storage for logos and social preview images.
-  - Assets: app logo, placeholder image, icon set, social preview template.
-  - Core features: auth, project CRUD, public routes, collect emails, owner notification, export CSV, branding uploads, spam prevention.
-  - Monetization (optional): free tier limits, paid features (multiple projects, custom domains, analytics).
-  - Key flows and anti‑abuse: reCAPTCHA v3, rate-limiting, email verification, export limits.
-- Success metrics:
-  - Activation (create project rate), engagement (submissions per project), retention, conversion to paid (if applicable), operational cost.
-
-Database (minimal schemas)
-- users
-  - id (uuid), email (unique), email_verified (bool), password_hash, name, created_at, updated_at, deleted_at (nullable)
-- projects
-  - id (uuid), owner_user_id (fk → users), name, description, recipient_email, slug (unique), button_color (HEX), logo_url, is_public (bool), created_at, updated_at, deleted_at
-- waitlist_entries
-  - id (uuid), project_id (fk → projects), email, ip_hash, user_agent, referrer, created_at, metadata (json nullable)
-- password_resets
-  - id, user_id, token_hash, expires_at, created_at
-
-API surface (essential)
-- POST /api/auth/signup
-- POST /api/auth/login
-- POST /api/auth/logout
-- POST /api/auth/request-reset
-- POST /api/auth/reset (token)
-- GET /api/dashboard/projects
-- POST /api/projects (create)
-- GET /api/projects/:id
-- PATCH /api/projects/:id
-- DELETE /api/projects/:id
-- GET /r/:slug (public page render)
-- POST /r/:slug/join (collect email)
-- GET /api/projects/:id/submissions (list)
-- POST /api/projects/:id/submissions/export (CSV)
-- POST /api/uploads/sign (signed upload for object storage)
-- Admin endpoints (optional) for moderation
-
-Operational & Deployment Notes
-- Host frontend as static site (Vercel/Netlify) with SSR/endpoints for /r/:slug if needed.
-- Backend: serverless functions or small Node/Go service with Postgres (Supabase) and object storage.
-- Use CDN and caching for public pages; short TTL for counters.
-- Email via SendGrid/Postmark; implement DKIM/SPF.
-- reCAPTCHA v3 on public submission endpoint.
-- Rate limiting per IP and per project; logging and alerting for abuse spikes.
-- Backups, retention policy, and data deletion flow.
-
-This blueprint contains everything required to implement LaunchList: product goals, pages, features, user journeys, UI system, DB models, APIs, and deployment considerations. Build in this order: auth → project CRUD + storage → public page rendering + join endpoint → notifications + export → dashboard + submissions UI → polish, monitoring, and tests.
+End prompt.
 
 ## Implementation Notes
 
