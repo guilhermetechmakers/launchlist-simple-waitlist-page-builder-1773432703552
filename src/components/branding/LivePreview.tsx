@@ -14,10 +14,10 @@ function maskEmail(email: string): string {
 }
 
 export interface LivePreviewProps {
-  productName: string;
-  description: string;
-  recipientEmail: string;
-  buttonColor: string;
+  productName?: string;
+  description?: string;
+  recipientEmail?: string;
+  buttonColor?: string;
   logoUrl?: string;
   className?: string;
 }
@@ -58,7 +58,7 @@ export function LivePreview({
             <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
             <div className="mt-4 flex gap-2">
               <Input
-                placeholder={maskEmail(recipientEmail)}
+                placeholder={maskEmail(recipientEmail ?? "")}
                 readOnly
                 disabled
                 className="flex-1 bg-[rgb(var(--input))]"

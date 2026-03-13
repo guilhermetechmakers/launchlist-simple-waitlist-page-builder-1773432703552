@@ -7,7 +7,7 @@ import { Copy, Check, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 
 export interface PublicLinkGeneratorProps {
-  slug: string;
+  slug: string | undefined;
   publicLink?: string | null;
   brandingVersion?: number;
   className?: string;
@@ -22,9 +22,10 @@ export function PublicLinkGenerator({
   const [copied, setCopied] = useState(false);
   const baseUrl =
     typeof window !== "undefined" ? window.location.origin : "";
+  const safeSlug = slug?.trim() ?? "";
   const url = publicLink && publicLink.length > 0
     ? publicLink
-    : (slug ? `${baseUrl}/r/${slug}` : "");
+    : (safeSlug ? `${baseUrl}/r/${safeSlug}` : "");
   const urlWithVersion =
     url && brandingVersion > 0 ? `${url}?v=${brandingVersion}` : url;
 
@@ -40,7 +41,7 @@ export function PublicLinkGenerator({
     }
   };
 
-  if (!slug) return null;
+  if (!safeSlug) return null;
 
   return (
     <Card className={cn("shadow-card", className)}>

@@ -203,7 +203,7 @@ export default function Setup() {
                         <FormItem>
                           <CopyEditor
                             label="Short description (optional)"
-                            value={field.value}
+                            value={field.value ?? ""}
                             onChange={field.onChange}
                             placeholder="One line that describes your product."
                             error={form.formState.errors.description?.message}
@@ -323,7 +323,7 @@ export default function Setup() {
                 logoUrl={watchLogoUrl || undefined}
               />
               <PublicLinkGenerator
-                slug={form.watch("slug")}
+                slug={slug}
                 publicLink={project?.public_link}
                 brandingVersion={project?.branding_version ?? 0}
               />
