@@ -73,6 +73,32 @@ export function useProjectBySlug(slug: string | undefined) {
   });
 }
 
+export interface PublicWaitlistPageData {
+  project: Project;
+  waitlistCount: number;
+}
+
+export function usePublicWaitlistPage(slug: string | undefined) {
+  return useQuery({
+    queryKey: [...projectKeys.bySlug(slug ?? ""), "page"] as const,
+    queryFn: async (): Promise<PublicWaitlistPageData> => {
+      if (!slug) throw new Error("No slug");
+      const { data, error } = await supabase.rpc("get_public_waitlist_page", {
+        p_slug: slug,
+      });
+      if (error) throw error;
+      const rows = Array.isArray(data) ? data : (data ? [data] : []);
+      const row = rows[0] as { project: Project; waitlist_count: number } | undefined;
+      if (!row?.project) throw new Error("Waitlist not found");
+      return {
+        project: row.project as Project,
+        waitlistCount: Number(row.waitlist_count ?? 0),
+      };
+    },
+    enabled: !!slug,
+  });
+}
+
 export function useCreateProject() {
   const qc = useQueryClient();
   return useMutation({

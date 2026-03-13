@@ -5,8 +5,6 @@ import { z } from "zod";
 import { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import {
   Form,
   FormControl,
@@ -16,27 +14,46 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import { Navbar } from "@/components/layout/Navbar";
 import { useProject, useCreateProject, useUpdateProject } from "@/hooks/useProjects";
+import { usePublishProject } from "@/hooks/usePublishProject";
+import {
+  BrandingUploader,
+  ButtonColorPicker,
+  CopyEditor,
+  LivePreview,
+  PublicLinkGenerator,
+} from "@/components/branding";
 
 const schema = z.object({
-  name: z.string().min(1, "Product name is required"),
-  description: z.string().optional(),
+  name: z.string().min(1, "Product name is required").max(100, "Max 100 characters"),
+  description: z.string().max(160).optional(),
   recipient_email: z.string().email("Valid email required"),
-  slug: z.string().min(1, "URL slug is required").regex(/^[a-z0-9-]+$/i, "Only letters, numbers, and hyphens"),
-  button_color: z.string().regex(/^#[0-9A-Fa-f]{6}$/, "Use a hex color e.g. #D6FF2A"),
+  slug: z
+    .string()
+    .min(1, "URL slug is required")
+    .regex(/^[a-z0-9-]+$/i, "Only letters, numbers, and hyphens"),
+  button_color: z
+    .string()
+    .regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, "Use a hex color e.g. #D6FF2A")
+    .optional()
+    .transform((v) => v || "#D6FF2A"),
+  logo_url: z.string().optional(),
   is_public: z.boolean(),
 });
 
 type FormValues = z.infer<typeof schema>;
 
-function slugify(s: string) {
-  return s
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9-]/g, "")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "") || "waitlist";
+function slugify(s: string): string {
+  return (
+    s
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "") || "waitlist"
+  );
 }
 
 export default function Setup() {
@@ -46,6 +63,7 @@ export default function Setup() {
   const { data: project, isLoading } = useProject(id);
   const createProject = useCreateProject();
   const updateProject = useUpdateProject(id ?? "");
+  const publishProject = usePublishProject();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -55,6 +73,7 @@ export default function Setup() {
       recipient_email: "",
       slug: "",
       button_color: "#D6FF2A",
+      logo_url: "",
       is_public: true,
     },
   });
@@ -74,7 +93,8 @@ export default function Setup() {
         description: project.description ?? "",
         recipient_email: project.recipient_email,
         slug: project.slug,
-        button_color: project.button_color,
+        button_color: project.button_color ?? "#D6FF2A",
+        logo_url: project.logo_url ?? "",
         is_public: project.is_public,
       });
     }
@@ -89,10 +109,13 @@ export default function Setup() {
           recipient_email: data.recipient_email,
           slug: data.slug,
           button_color: data.button_color,
+          logo_url: data.logo_url || null,
           is_public: data.is_public,
         },
         {
-          onSuccess: () => navigate("/dashboard"),
+          onSuccess: (updated) => {
+            publishProject.mutate(updated.id);
+          },
         }
       );
     } else {
@@ -103,6 +126,7 @@ export default function Setup() {
           recipient_email: data.recipient_email,
           slug: data.slug,
           button_color: data.button_color,
+          logo_url: data.logo_url || null,
           is_public: data.is_public,
         },
         {
@@ -113,6 +137,11 @@ export default function Setup() {
   };
 
   const pending = createProject.isPending || updateProject.isPending;
+  const watchName = form.watch("name");
+  const watchDescription = form.watch("description");
+  const watchRecipient = form.watch("recipient_email");
+  const watchButtonColor = form.watch("button_color");
+  const watchLogoUrl = form.watch("logo_url");
 
   if (isEdit && isLoading && !project) {
     return (
@@ -124,8 +153,6 @@ export default function Setup() {
       </div>
     );
   }
-
-  const publicUrl = typeof window !== "undefined" ? `${window.location.origin}/r/${form.getValues("slug") || "..."}` : "";
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -142,13 +169,16 @@ export default function Setup() {
           </div>
 
           <div className="grid gap-8 lg:grid-cols-2">
-            <Card>
+            <Card className="shadow-card">
               <CardHeader>
                 <h2 className="font-heading text-lg font-semibold">Details</h2>
               </CardHeader>
               <CardContent>
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4"
+                  >
                     <FormField
                       control={form.control}
                       name="name"
@@ -156,7 +186,11 @@ export default function Setup() {
                         <FormItem>
                           <FormLabel>Product name</FormLabel>
                           <FormControl>
-                            <Input placeholder="My Awesome App" {...field} />
+                            <Input
+                              placeholder="My Awesome App"
+                              maxLength={100}
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -167,10 +201,13 @@ export default function Setup() {
                       name="description"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Short description (optional)</FormLabel>
-                          <FormControl>
-                            <Textarea placeholder="One line that describes your product." {...field} />
-                          </FormControl>
+                          <CopyEditor
+                            label="Short description (optional)"
+                            value={field.value}
+                            onChange={field.onChange}
+                            placeholder="One line that describes your product."
+                            error={form.formState.errors.description?.message}
+                          />
                           <FormMessage />
                         </FormItem>
                       )}
@@ -182,7 +219,11 @@ export default function Setup() {
                         <FormItem>
                           <FormLabel>Notify this email when someone joins</FormLabel>
                           <FormControl>
-                            <Input type="email" placeholder="you@example.com" {...field} />
+                            <Input
+                              type="email"
+                              placeholder="you@example.com"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -206,18 +247,25 @@ export default function Setup() {
                       name="button_color"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Button color (hex)</FormLabel>
-                          <FormControl>
-                            <div className="flex gap-2">
-                              <Input placeholder="#D6FF2A" {...field} />
-                              <input
-                                type="color"
-                                value={field.value}
-                                onChange={(e) => field.onChange(e.target.value)}
-                                className="h-12 w-14 cursor-pointer rounded-xl border border-border"
-                              />
-                            </div>
-                          </FormControl>
+                          <ButtonColorPicker
+                            value={field.value}
+                            onChange={field.onChange}
+                            error={form.formState.errors.button_color?.message}
+                          />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="logo_url"
+                      render={({ field }) => (
+                        <FormItem>
+                          <BrandingUploader
+                            logoUrl={field.value || undefined}
+                            onLogoUrlChange={field.onChange}
+                            disabled={pending}
+                          />
                           <FormMessage />
                         </FormItem>
                       )}
@@ -234,69 +282,51 @@ export default function Setup() {
                             </p>
                           </div>
                           <FormControl>
-                            <Switch checked={field.value} onCheckedChange={field.onChange} />
+                            <Switch
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
                           </FormControl>
                         </FormItem>
                       )}
                     />
-                    <Button type="submit" disabled={pending}>
-                      {pending ? "Saving…" : isEdit ? "Save changes" : "Save & publish"}
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button type="submit" disabled={pending}>
+                        {pending
+                          ? "Saving…"
+                          : isEdit
+                            ? "Save & publish"
+                            : "Save & publish"}
+                      </Button>
+                      {isEdit && project && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={publishProject.isPending}
+                          onClick={() => publishProject.mutate(project.id)}
+                        >
+                          {publishProject.isPending ? "Publishing…" : "Publish"}
+                        </Button>
+                      )}
+                    </div>
                   </form>
                 </Form>
               </CardContent>
             </Card>
 
             <div className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <h2 className="font-heading text-lg font-semibold">Preview</h2>
-                  <p className="text-sm text-muted-foreground">Your public page</p>
-                </CardHeader>
-                <CardContent>
-                  <div className="rounded-2xl border border-border bg-background p-6">
-                    <p className="font-heading text-lg font-semibold text-foreground">
-                      {form.watch("name") || "Your Product"}
-                    </p>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      {form.watch("description") || "Short description for early adopters."}
-                    </p>
-                    <div className="mt-4 flex gap-2">
-                      <Input
-                        placeholder="you@example.com"
-                        className="flex-1"
-                        readOnly
-                        disabled
-                      />
-                      <Button
-                        size="sm"
-                        style={{
-                          backgroundColor: form.watch("button_color") || "#D6FF2A",
-                          color: "#0B0B0B",
-                        }}
-                      >
-                        Join
-                      </Button>
-                    </div>
-                    <p className="mt-3 text-xs text-muted-foreground">
-                      Join 0 others on the list
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-              {form.watch("slug") && (
-                <p className="text-sm text-muted-foreground">
-                  Public URL:{" "}
-                  <a
-                    href={publicUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    {publicUrl}
-                  </a>
-                </p>
-              )}
+              <LivePreview
+                productName={watchName}
+                description={watchDescription}
+                recipientEmail={watchRecipient}
+                buttonColor={watchButtonColor}
+                logoUrl={watchLogoUrl || undefined}
+              />
+              <PublicLinkGenerator
+                slug={form.watch("slug")}
+                publicLink={project?.public_link}
+                brandingVersion={project?.branding_version ?? 0}
+              />
             </div>
           </div>
         </div>
