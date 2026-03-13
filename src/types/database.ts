@@ -46,6 +46,9 @@ export interface Database {
           button_color: string;
           logo_url: string | null;
           is_public: boolean;
+          social_image_url: string | null;
+          public_link: string | null;
+          branding_version: number;
           created_at: string;
           updated_at: string;
           deleted_at: string | null;
@@ -60,6 +63,9 @@ export interface Database {
           button_color?: string;
           logo_url?: string | null;
           is_public?: boolean;
+          social_image_url?: string | null;
+          public_link?: string | null;
+          branding_version?: number;
           created_at?: string;
           updated_at?: string;
           deleted_at?: string | null;
@@ -74,6 +80,9 @@ export interface Database {
           button_color?: string;
           logo_url?: string | null;
           is_public?: boolean;
+          social_image_url?: string | null;
+          public_link?: string | null;
+          branding_version?: number;
           created_at?: string;
           updated_at?: string;
           deleted_at?: string | null;
