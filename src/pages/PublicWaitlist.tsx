@@ -6,14 +6,14 @@ import { z } from "zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { usePublicWaitlistPage } from "@/hooks/useProjects";
 import { useJoinWaitlist } from "@/hooks/useJoinWaitlist";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { projectKeys } from "@/hooks/useProjects";
 
-const DEFAULT_BUTTON_COLOR = "#D6FF2A";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -74,8 +74,9 @@ export default function PublicWaitlist() {
     );
   }
 
-  const buttonColor =
-    project.button_color?.trim() || DEFAULT_BUTTON_COLOR;
+  // Use design tokens when no custom color; custom color uses inline style with token for text.
+  const customButtonColor = project.button_color?.trim() ?? "";
+  const usePrimaryToken = !customButtonColor;
   const description =
     project.description?.trim() || "Join the waitlist to get early access.";
   const productName = project.name?.trim() || "Waitlist";
@@ -128,28 +129,58 @@ export default function PublicWaitlist() {
               onSubmit={form.handleSubmit(onSubmit)}
               className="mt-8 space-y-4"
             >
-              <Input
-                type="email"
-                placeholder="you@example.com"
-                {...form.register("email")}
-                className="h-12 w-full rounded-xl border-border bg-[rgb(var(--input))]"
-                aria-label="Email address"
-              />
-              {form.formState.errors.email && (
-                <p className="text-sm text-destructive">
-                  {form.formState.errors.email.message}
-                </p>
-              )}
+              <div className="space-y-2">
+                <Label htmlFor="public-waitlist-email" className="sr-only">
+                  Email address
+                </Label>
+                <Input
+                  id="public-waitlist-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  {...form.register("email")}
+                  className="h-12 w-full rounded-xl border-border bg-[rgb(var(--input))]"
+                  aria-invalid={Boolean(form.formState.errors.email)}
+                  aria-describedby={
+                    form.formState.errors.email
+                      ? "public-waitlist-email-error"
+                      : undefined
+                  }
+                />
+                {form.formState.errors.email && (
+                  <p
+                    id="public-waitlist-email-error"
+                    className="text-sm text-destructive"
+                    role="alert"
+                  >
+                    {form.formState.errors.email.message}
+                  </p>
+                )}
+              </div>
               <Button
                 type="submit"
                 className="h-12 w-full rounded-full transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                style={{
-                  backgroundColor: buttonColor,
-                  color: "#0B0B0B",
-                }}
+                style={
+                  usePrimaryToken
+                    ? undefined
+                    : {
+                        backgroundColor: customButtonColor,
+                        color: "rgb(var(--primary-foreground))",
+                      }
+                }
                 disabled={join.isPending}
               >
-                {join.isPending ? "Joining…" : "Join waitlist"}
+                {join.isPending ? (
+                  <>
+                    <Loader2
+                      className="h-4 w-4 animate-spin"
+                      aria-hidden
+                    />
+                    <span>Joining…</span>
+                  </>
+                ) : (
+                  "Join waitlist"
+                )}
               </Button>
             </form>
           )}
