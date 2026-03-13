@@ -2,6 +2,7 @@
  * Client-side image upload with basic crop/resize to 300x300 for header.
  * Returns optimized data URL or blob for upload.
  * Supports loading (resize) and uploading (signed URL) states and inline error.
+ * Uses design tokens (no hardcoded colors) and full accessibility (aria-labels, focus, reduced motion).
  */
 
 import { useRef, useState } from "react";
@@ -132,10 +133,10 @@ export function ImageUploader({
       </Label>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         {imageUrl ? (
-          <div className="flex items-center gap-3 rounded-xl border border-border bg-[rgb(var(--input))] p-3 shadow-sm transition-shadow duration-200 hover:shadow-card">
+          <div className="flex items-center gap-3 rounded-xl border border-border bg-input p-3 shadow-sm transition-shadow duration-200 hover:shadow-card">
             <img
               src={imageUrl}
-              alt="Uploaded logo"
+              alt="Uploaded logo preview"
               className="h-14 w-14 rounded-lg object-contain"
             />
             <div className="flex flex-col gap-1">
@@ -169,25 +170,35 @@ export function ImageUploader({
             </div>
           </div>
         ) : (
-          <button
+          <Button
             type="button"
+            variant="outline"
             disabled={disabled || isBusy}
             onClick={() => inputRef.current?.click()}
-            className="flex h-24 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-[rgb(var(--input))] shadow-sm transition-all duration-200 hover:border-primary/40 hover:bg-primary/5 hover:shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2"
-            aria-label="Upload logo. PNG, JPEG or WebP, max 5MB. Image will be resized to 300px."
+            className={cn(
+              "h-24 w-full min-h-[6rem] flex-col gap-2 rounded-xl border-2 border-dashed border-border bg-input shadow-sm transition-all duration-200",
+              "hover:border-primary/40 hover:bg-primary/5 hover:shadow-card",
+              "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+              "md:flex-row"
+            )}
+            aria-label="Upload logo image. Accepted formats: PNG, JPEG, WebP. Maximum size 5MB. Image will be resized to 300 pixels. Optional."
             aria-busy={isBusy}
+            aria-describedby={errorMessage ? errorId : undefined}
           >
             {isBusy ? (
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" aria-hidden />
+              <>
+                <Loader2 className="h-6 w-6 shrink-0 animate-spin text-muted-foreground" aria-hidden />
+                <span className="text-sm text-muted-foreground">Processing image…</span>
+              </>
             ) : (
               <>
-                <Upload className="h-6 w-6 text-muted-foreground" aria-hidden />
+                <Upload className="h-6 w-6 shrink-0 text-muted-foreground" aria-hidden />
                 <span className="text-sm text-muted-foreground">
                   Upload logo (resized to 300px, PNG/JPEG/WebP, max 5MB)
                 </span>
               </>
             )}
-          </button>
+          </Button>
         )}
         <input
           ref={inputRef}
