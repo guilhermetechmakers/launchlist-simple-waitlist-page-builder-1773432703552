@@ -45,10 +45,15 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        button: "var(--radius-button)",
       },
       boxShadow: {
         card: "0 2px 8px rgba(6, 6, 6, 0.08)",
         "card-hover": "0 12px 24px rgba(6, 6, 6, 0.08), 0 0 0 1px rgba(214, 255, 42, 0.12)",
+        /* Button elevation: base and hover lift per design system */
+        button: "0 1px 3px rgba(6, 6, 6, 0.08)",
+        "button-hover": "0 4px 12px rgba(6, 6, 6, 0.12)",
+        "button-primary-glow": "0 0 0 1px rgba(214, 255, 42, 0.25)",
       },
       animation: {
         "fade-in": "fadeIn 0.4s ease-out",

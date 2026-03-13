@@ -1,27 +1,34 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/**
+ * Button variants using design tokens only (no hardcoded hex).
+ * Radius: rounded-button (--radius-button); shadows: theme shadow-button / shadow-button-hover.
+ */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-button text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:opacity-95 hover:scale-[1.02] active:scale-[0.98]",
-        destructive: "bg-destructive text-destructive-foreground hover:opacity-90",
+          "bg-primary text-primary-foreground shadow-button hover:opacity-95 hover:scale-[1.02] hover:shadow-button-hover active:scale-[0.98] active:shadow-button",
+        destructive:
+          "bg-destructive text-destructive-foreground shadow-button hover:opacity-90 hover:shadow-button-hover",
         outline:
-          "border border-primary bg-transparent text-foreground hover:bg-primary/10",
-        secondary: "bg-secondary text-secondary-foreground hover:opacity-90",
+          "border border-primary bg-transparent text-foreground shadow-sm hover:bg-primary/10 hover:shadow-button",
+        secondary:
+          "bg-secondary text-secondary-foreground shadow-button hover:opacity-90 hover:shadow-button-hover",
         ghost: "hover:bg-accent/10 hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-primary underline-offset-4 hover:underline shadow-none",
       },
       size: {
         default: "h-11 px-6 py-3",
-        sm: "h-9 rounded-full px-4",
-        lg: "h-12 rounded-full px-8 text-base",
-        icon: "h-10 w-10",
+        sm: "h-9 rounded-button px-4",
+        lg: "h-12 rounded-button px-8 text-base",
+        icon: "h-10 w-10 rounded-button",
       },
     },
     defaultVariants: {
@@ -35,17 +42,60 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  /** Optional left icon (e.g. Lucide icon). Hidden when loading. */
+  leftIcon?: React.ReactNode;
+  /** Optional right icon (e.g. Lucide icon). Replaced by spinner when loading. */
+  rightIcon?: React.ReactNode;
+  /** When true, shows Loader2 spinner and disables the button. */
+  loading?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      leftIcon,
+      rightIcon,
+      loading = false,
+      disabled,
+      children,
+      ...props
+    },
+    ref
+  ) => {
     const Comp = asChild ? Slot : "button";
+    const isDisabled = disabled ?? loading;
+
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        disabled={isDisabled}
+        aria-busy={loading}
+        aria-disabled={isDisabled}
         {...props}
-      />
+      >
+        {loading ? (
+          <>
+            <Loader2
+              className="size-4 animate-spin"
+              aria-hidden="false"
+              role="img"
+              aria-label="Loading"
+            />
+            {children}
+          </>
+        ) : (
+          <>
+            {leftIcon}
+            {children}
+            {rightIcon}
+          </>
+        )}
+      </Comp>
     );
   }
 );

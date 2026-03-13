@@ -25,6 +25,8 @@
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
     --radius: 0.75rem;
+    /* Button radius: design system 4–6px for buttons; reuse --radius for consistency */
+    --radius-button: 0.5rem;
     /* Dark hero/surface for preview and landing sections */
     --surface-dark: 31 32 35; /* #1F2023 */
   }
