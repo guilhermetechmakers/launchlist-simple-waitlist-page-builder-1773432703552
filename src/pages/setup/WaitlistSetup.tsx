@@ -136,7 +136,7 @@ export default function WaitlistSetup() {
         {
           onSuccess: (newProject) => {
             showSuccessToast(newProject);
-            navigate(`/setup/${newProject.id}`);
+            navigate(`/setup/waitlist/${newProject.id}`);
           },
         }
       );
