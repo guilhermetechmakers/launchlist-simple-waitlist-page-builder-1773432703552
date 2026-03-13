@@ -278,46 +278,13 @@ export default function WaitlistSetup() {
                       description={watchDescription}
                       recipientEmail={watchRecipient}
                       buttonColor={watchButtonColor}
-                      logoUrl={watchLogoUrl || undefined}
+                      logoUrl={watchLogoUrl ?? undefined}
                       onDescriptionChange={(v) => form.setValue("description", v)}
                       onButtonColorChange={(v) => form.setValue("button_color", v)}
                       onLogoUrlChange={(v) => form.setValue("logo_url", v)}
                       descriptionError={form.formState.errors.description?.message}
                       buttonColorError={form.formState.errors.button_color?.message}
                       disabled={pending}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem className="sr-only">
-                          <FormControl>
-                            <input type="hidden" {...field} value={field.value ?? ""} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="button_color"
-                      render={({ field }) => (
-                        <FormItem className="sr-only">
-                          <FormControl>
-                            <input type="hidden" {...field} value={field.value ?? ""} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="logo_url"
-                      render={({ field }) => (
-                        <FormItem className="sr-only">
-                          <FormControl>
-                            <input type="hidden" {...field} value={field.value ?? ""} />
-                          </FormControl>
-                        </FormItem>
-                      )}
                     />
                     <FormField
                       control={form.control}
