@@ -9,6 +9,7 @@ import Signup from "@/pages/Signup";
 import ForgotPassword from "@/pages/ForgotPassword";
 import Dashboard from "@/pages/Dashboard";
 import Setup from "@/pages/Setup";
+import WaitlistSetup from "@/pages/setup/WaitlistSetup";
 import PublicWaitlist from "@/pages/PublicWaitlist";
 import Submissions from "@/pages/Submissions";
 import Profile from "@/pages/Profile";
@@ -64,6 +65,22 @@ export default function App() {
             element={
               <AuthGuard>
                 <Setup />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/setup/waitlist/new"
+            element={
+              <AuthGuard>
+                <WaitlistSetup />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/setup/waitlist/:id"
+            element={
+              <AuthGuard>
+                <WaitlistSetup />
               </AuthGuard>
             }
           />
