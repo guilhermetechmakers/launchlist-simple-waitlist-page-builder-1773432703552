@@ -36,7 +36,9 @@ export default {
         destructive: "rgb(var(--destructive))",
         "destructive-foreground": "rgb(var(--destructive-foreground))",
         "surface-dark": "rgb(var(--surface-dark))",
+        "surface-dark-raised": "rgb(var(--surface-dark-raised))",
         "surface-raised": "rgb(var(--surface-raised))",
+        "hero-subtitle": "rgb(var(--hero-subtitle))",
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
