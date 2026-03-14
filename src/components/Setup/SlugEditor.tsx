@@ -99,16 +99,16 @@ export function SlugEditor({
       </div>
 
       {publicUrl ? (
-        <Card className="overflow-hidden border-border bg-card shadow-card transition-shadow duration-200">
-          <CardContent className="space-y-3 p-4 sm:p-5">
-            <h3 className="font-heading text-sm font-semibold text-foreground">
+        <Card className="overflow-hidden rounded-xl border border-border bg-card shadow-md transition-shadow duration-200">
+          <CardContent className="space-y-4 p-4">
+            <h3 className="font-heading text-sm font-semibold text-card-foreground">
               Public URL
             </h3>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
               <Input
                 readOnly
                 value={publicUrl}
-                className="font-mono text-sm text-foreground bg-input border-border"
+                className="font-mono text-sm text-card-foreground bg-input border-border focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 aria-label="Public waitlist URL"
               />
               <Button
@@ -119,12 +119,12 @@ export function SlugEditor({
                 disabled={!publicUrl || isCopying}
                 loading={isCopying}
                 aria-label={copied ? "Link copied" : "Copy link"}
-                className="shrink-0 self-stretch min-h-[2.75rem] sm:self-auto sm:min-h-0 sm:h-10 sm:w-10"
+                className="shrink-0 self-stretch min-h-[2.75rem] text-card-foreground hover:bg-primary/10 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:self-auto sm:min-h-0 sm:h-10 sm:w-10"
               >
                 {isCopying ? null : copied ? (
                   <Check className="h-4 w-4 text-primary" aria-hidden />
                 ) : (
-                  <Copy className="h-4 w-4 text-foreground" aria-hidden />
+                  <Copy className="h-4 w-4 text-current" aria-hidden />
                 )}
               </Button>
             </div>
@@ -132,7 +132,7 @@ export function SlugEditor({
               href={publicUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 rounded-sm"
+              className="inline-flex items-center gap-2 text-sm text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
             >
               <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden />
               Open in new tab
@@ -141,8 +141,8 @@ export function SlugEditor({
         </Card>
       ) : (
         /* Empty state when no slug yet: design tokens only */
-        <Card className="overflow-hidden border-border bg-card border-dashed">
-          <CardContent className="flex flex-col items-center justify-center gap-2 py-8 px-4 text-center">
+        <Card className="overflow-hidden rounded-xl border border-dashed border-border bg-card shadow-md">
+          <CardContent className="flex flex-col items-center justify-center gap-4 py-8 px-4 text-center">
             <Link2
               className="h-10 w-10 text-muted-foreground"
               aria-hidden
