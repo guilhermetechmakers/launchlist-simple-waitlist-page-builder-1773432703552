@@ -2,9 +2,9 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 
-/** Design system: use theme tokens (bg-input, border, ring) — no hardcoded colors */
+/** Design system: use theme tokens (bg-input, border-border, ring) — no hardcoded colors */
 const textareaBaseClasses =
-  "flex min-h-[100px] w-full rounded-xl border px-4 py-3 text-base transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50";
+  "flex min-h-[100px] w-full rounded-lg border border-border p-4 text-base transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50";
 
 export interface TextareaProps extends React.ComponentProps<"textarea"> {
   /** Optional label; when provided, renders shadcn Label and associates via id/htmlFor for accessibility */
@@ -52,7 +52,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         ref={ref}
         className={cn(
           textareaBaseClasses,
-          "border-border bg-input",
+          "bg-input",
           error && "border-destructive focus-visible:ring-destructive/20",
           className
         )}
