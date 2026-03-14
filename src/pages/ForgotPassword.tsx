@@ -35,7 +35,7 @@ export default function ForgotPassword() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex flex-1 items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md animate-fade-in-up">
+        <Card className="w-full max-w-md animate-fade-in-up rounded-xl shadow-lg">
           <CardHeader>
             <CardTitle>Reset password</CardTitle>
             <CardDescription>
@@ -44,7 +44,7 @@ export default function ForgotPassword() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
                   name="email"
@@ -52,19 +52,31 @@ export default function ForgotPassword() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="you@example.com" {...field} />
+                        <Input
+                          type="email"
+                          placeholder="you@example.com"
+                          className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={reset.isPending}>
+                <Button
+                  type="submit"
+                  className="w-full focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  disabled={reset.isPending}
+                >
                   {reset.isPending ? "Sending…" : "Send reset link"}
                 </Button>
               </form>
             </Form>
-            <p className="mt-6 text-center text-sm text-muted-foreground">
-              <Link to="/login" className="text-primary hover:underline">
+            <p className="mt-6 text-center text-sm text-foreground/80">
+              <Link
+                to="/login"
+                className="inline-flex items-center justify-center rounded-md text-primary outline-none transition-colors hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
                 Back to log in
               </Link>
             </p>
