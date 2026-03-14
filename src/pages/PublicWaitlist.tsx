@@ -87,13 +87,13 @@ export default function PublicWaitlist() {
         <div className="mx-auto flex max-w-[1200px] items-center justify-between">
           <Link
             to="/"
-            className="font-heading text-lg font-bold text-foreground"
+            className="font-heading text-lg font-bold text-foreground rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             LaunchList
           </Link>
           <Link
             to="/login"
-            className="text-sm text-muted-foreground hover:text-foreground"
+            className="text-sm text-muted-foreground hover:text-foreground rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             Log in
           </Link>
@@ -101,7 +101,7 @@ export default function PublicWaitlist() {
       </header>
 
       <main className="flex flex-1 flex-col items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md animate-fade-in-up rounded-2xl border border-border bg-card p-8 shadow-card transition-shadow duration-200 hover:shadow-card-hover">
+        <div className="w-full max-w-md animate-fade-in-up rounded-2xl border border-border bg-card p-6 shadow-lg transition-shadow duration-200 hover:shadow-xl md:p-8">
           {project.logo_url && (
             <img
               src={project.logo_url}
@@ -112,24 +112,24 @@ export default function PublicWaitlist() {
           <h1 className="font-heading text-2xl font-bold text-foreground md:text-3xl">
             {productName}
           </h1>
-          <p className="mt-3 text-muted-foreground">{description}</p>
+          <p className="mt-4 text-muted-foreground">{description}</p>
 
           {joined ? (
-            <div className="mt-8 flex flex-col items-center rounded-xl bg-primary/10 py-6 text-center animate-scale-in">
+            <div className="mt-8 flex flex-col items-center gap-2 rounded-xl bg-primary/10 py-6 text-center animate-scale-in">
               <Check className="h-10 w-10 text-primary" />
-              <p className="mt-2 font-semibold text-foreground">
+              <p className="font-semibold text-foreground">
                 You’re on the list!
               </p>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 We’ll notify you when we launch.
               </p>
             </div>
           ) : (
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="mt-8 space-y-4"
+              className="mt-8 flex flex-col gap-4"
             >
-              <div className="space-y-2">
+              <div className="flex flex-col gap-2">
                 <Label htmlFor="public-waitlist-email" className="sr-only">
                   Email address
                 </Label>
@@ -139,7 +139,7 @@ export default function PublicWaitlist() {
                   placeholder="you@example.com"
                   autoComplete="email"
                   {...form.register("email")}
-                  className="h-12 w-full rounded-xl border-border bg-[rgb(var(--input))]"
+                  className="h-12 w-full rounded-xl border-border bg-input focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   aria-invalid={Boolean(form.formState.errors.email)}
                   aria-describedby={
                     form.formState.errors.email
@@ -159,14 +159,11 @@ export default function PublicWaitlist() {
               </div>
               <Button
                 type="submit"
-                className="h-12 w-full rounded-full transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                className="h-12 w-full rounded-xl text-primary-foreground transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 style={
                   usePrimaryToken
                     ? undefined
-                    : {
-                        backgroundColor: customButtonColor,
-                        color: "rgb(var(--primary-foreground))",
-                      }
+                    : { backgroundColor: customButtonColor }
                 }
                 disabled={join.isPending}
               >
@@ -193,11 +190,11 @@ export default function PublicWaitlist() {
         </div>
 
         <p className="mt-8 text-center text-xs text-muted-foreground">
-          <Link to="/" className="hover:underline">
+          <Link to="/" className="hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
             Powered by LaunchList
           </Link>
           {" · "}
-          <Link to="/privacy" className="hover:underline">
+          <Link to="/privacy" className="hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
             Privacy
           </Link>
         </p>
