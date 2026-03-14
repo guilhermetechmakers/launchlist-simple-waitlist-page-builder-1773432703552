@@ -16,8 +16,8 @@ export default function Profile() {
       <div className="flex min-h-screen flex-col" role="main" aria-busy="true" aria-label="Loading profile">
         <Navbar />
         <main className="flex-1 px-4 py-8 md:px-6">
-          <div className="mx-auto max-w-[600px] space-y-6">
-            <Skeleton className="h-9 w-24 rounded-button" aria-hidden />
+          <div className="mx-auto max-w-xl space-y-6">
+            <Skeleton className="h-9 w-24 rounded-lg" aria-hidden />
             <Card>
               <CardHeader>
                 <Skeleton className="h-7 w-24" aria-hidden />
@@ -25,7 +25,7 @@ export default function Profile() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <Skeleton className="h-16 w-full rounded-lg" aria-hidden />
-                <Skeleton className="h-11 w-28 rounded-button" aria-hidden />
+                <Skeleton className="h-11 w-28 rounded-lg" aria-hidden />
               </CardContent>
             </Card>
           </div>
@@ -40,21 +40,21 @@ export default function Profile() {
       <div className="flex min-h-screen flex-col" role="main" aria-label="Profile page">
         <Navbar />
         <main className="flex flex-1 flex-col items-center justify-center px-4 py-8 md:px-6">
-          <Card className="w-full max-w-[400px] border-border shadow-card animate-fade-in">
+          <Card className="w-full max-w-md border-border shadow-lg rounded-xl animate-fade-in">
             <CardHeader className="text-center">
               <div
-                className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-muted/50 text-muted-foreground"
+                className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-muted/50 text-gray-700"
                 aria-hidden
               >
                 <LogIn className="h-7 w-7" />
               </div>
               <CardTitle className="text-xl">You’re not signed in</CardTitle>
-              <CardDescription className="mt-2 text-base">
+              <CardDescription className="mt-2 text-base text-gray-700">
                 Sign in to view your profile, manage waitlists, and access your dashboard.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
-              <Button asChild className="w-full" aria-label="Go to login page">
+              <Button asChild className="w-full focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" aria-label="Go to login page">
                 <Link to="/login">
                   <LogIn className="h-4 w-4" aria-hidden />
                   Log in
@@ -71,12 +71,12 @@ export default function Profile() {
     <div className="flex min-h-screen flex-col" role="main" aria-label="Profile page">
       <Navbar />
       <main className="flex-1 px-4 py-8 md:px-6">
-        <div className="mx-auto max-w-[600px]">
+        <div className="mx-auto max-w-xl">
           <Button
             variant="ghost"
             size="sm"
             asChild
-            className="mb-6"
+            className="mb-6 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label="Back to dashboard"
           >
             <Link to="/dashboard">
@@ -93,12 +93,12 @@ export default function Profile() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="text-sm font-medium text-muted-foreground" id="email-label">Email</p>
+                <p className="text-sm font-medium text-gray-700" id="email-label">Email</p>
                 <p className="mt-1 text-foreground" aria-labelledby="email-label">{user.email ?? "—"}</p>
               </div>
               {user.user_metadata?.full_name && (
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground" id="name-label">Name</p>
+                  <p className="text-sm font-medium text-gray-700" id="name-label">Name</p>
                   <p className="mt-1 text-foreground" aria-labelledby="name-label">{String(user.user_metadata.full_name)}</p>
                 </div>
               )}
@@ -107,6 +107,7 @@ export default function Profile() {
                 onClick={() => signOut.mutate()}
                 disabled={signOut.isPending}
                 loading={signOut.isPending}
+                className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 aria-label={signOut.isPending ? "Signing out…" : "Sign out of your account"}
                 aria-busy={signOut.isPending}
               >
