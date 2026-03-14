@@ -1,11 +1,7 @@
 import * as React from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
-import {
-  Controller,
-  FormProvider,
-  useFormContext,
-} from "react-hook-form";
+import { Controller, FormProvider } from "react-hook-form";
 import type {
   ControllerProps,
   FieldPath,
@@ -17,19 +13,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FormFieldContext, FormItemContext } from "@/components/ui/form-context";
+import { useFormField } from "@/components/ui/use-form-field";
 
 const Form = FormProvider;
-
-type FormFieldContextValue<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-> = {
-  name: TName;
-};
-
-const FormFieldContext = React.createContext<FormFieldContextValue>(
-  {} as FormFieldContextValue
-);
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
@@ -43,36 +30,6 @@ const FormField = <
     </FormFieldContext.Provider>
   );
 };
-
-const useFormField = () => {
-  const fieldContext = React.useContext(FormFieldContext);
-  const itemContext = React.useContext(FormItemContext);
-  const { getFieldState, formState } = useFormContext();
-  const fieldState = getFieldState(fieldContext.name, formState);
-
-  if (!fieldContext) {
-    throw new Error("useFormField should be used within FormField");
-  }
-
-  const { id } = itemContext;
-
-  return {
-    id,
-    name: fieldContext.name,
-    formItemId: `${id}-form-item`,
-    formDescriptionId: `${id}-form-item-description`,
-    formMessageId: `${id}-form-item-message`,
-    ...fieldState,
-  };
-};
-
-type FormItemContextValue = {
-  id: string;
-};
-
-const FormItemContext = React.createContext<FormItemContextValue>(
-  {} as FormItemContextValue
-);
 
 /** FormItem uses design system spacing: gap-2 = 8px (scale). */
 const FormItem = React.forwardRef<
@@ -194,7 +151,8 @@ const headingLevelClasses: Record<FormHeadingLevel, string> = {
 
 const FormHeading = React.forwardRef<HTMLHeadingElement, FormHeadingProps>(
   ({ level = 2, className, id: idProp, ...props }, ref) => {
-    const id = idProp ?? React.useId();
+    const generatedId = React.useId();
+    const id = idProp ?? generatedId;
     const sharedClassName = cn(
       "font-heading font-bold text-foreground tracking-tight",
       headingLevelClasses[level],
@@ -331,7 +289,6 @@ const FormEmptyState = React.forwardRef<HTMLDivElement, FormEmptyStateProps>(
 FormEmptyState.displayName = "FormEmptyState";
 
 export {
-  useFormField,
   Form,
   FormItem,
   FormLabel,

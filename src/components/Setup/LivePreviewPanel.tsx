@@ -16,7 +16,7 @@ import {
   ImageIcon,
   AlertCircle,
 } from "lucide-react";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 
 function maskEmail(email: string): string {
   if (!email?.trim()) return "you@example.com";
@@ -58,11 +58,6 @@ function PreviewBlock({
 
   const handleLogoLoad = useCallback(() => setLogoState("loaded"), []);
   const handleLogoError = useCallback(() => setLogoState("error"), []);
-
-  useEffect(() => {
-    if (!logoUrl) setLogoState("idle");
-    else setLogoState("loading");
-  }, [logoUrl]);
 
   return (
     <article
@@ -213,6 +208,7 @@ export function LivePreviewPanel({
               Desktop
             </p>
             <PreviewBlock
+              key={logoUrl ?? "no-logo"}
               productName={productName}
               description={description}
               recipientEmail={recipientEmail}
@@ -228,6 +224,7 @@ export function LivePreviewPanel({
             </p>
             <div className="max-w-[320px]">
               <PreviewBlock
+                key={`mobile-${logoUrl ?? "no-logo"}`}
                 productName={productName}
                 description={description}
                 recipientEmail={recipientEmail}
