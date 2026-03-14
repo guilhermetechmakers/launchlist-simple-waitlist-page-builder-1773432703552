@@ -103,23 +103,29 @@ export function BrandingCustomizerPanel({
 
   return (
     <Card
-      className={cn("rounded-2xl border border-border bg-card shadow-card", className)}
+      className={cn(
+        "rounded-xl border border-border bg-card shadow-md transition-shadow duration-200 hover:shadow-lg focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
+        className
+      )}
       aria-labelledby="branding-panel-title"
       aria-describedby="branding-panel-desc"
     >
-      <CardHeader className="pb-4">
+      <CardHeader className="space-y-2 p-6 pb-4">
         <CardTitle
           id="branding-panel-title"
-          className="flex items-center gap-2 font-heading text-xl"
+          className="flex items-center gap-2 font-heading text-xl text-foreground"
         >
           <Palette className="h-5 w-5 text-primary" aria-hidden />
           Branding
         </CardTitle>
-        <CardDescription id="branding-panel-desc">
+        <CardDescription
+          id="branding-panel-desc"
+          className="text-sm text-foreground/75"
+        >
           Logo, short description, and button color for your waitlist page.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 p-6 pt-0">
         <ImageUploader
           imageUrl={logoUrl}
           onImageReady={handleImageReady}
