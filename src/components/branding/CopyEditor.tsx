@@ -42,12 +42,12 @@ export function CopyEditor({
   return (
     <div
       className={cn(
-        "space-y-2 rounded-lg border border-border bg-card p-4 transition-shadow duration-200",
-        "focus-within:shadow-card-hover focus-within:ring-2 focus-within:ring-primary/10",
+        "space-y-4 rounded-lg border border-border bg-card p-4 shadow-sm transition-shadow duration-200",
+        "focus-within:shadow-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
         className
       )}
     >
-      <Label htmlFor={id} className="text-foreground font-medium">
+      <Label htmlFor={id} className="text-foreground font-medium leading-normal">
         {label}
       </Label>
       {isLoading ? (
@@ -65,7 +65,7 @@ export function CopyEditor({
           maxLength={maxLength}
           disabled={disabled}
           rows={3}
-          className="resize-none"
+          className="resize-none leading-relaxed"
           aria-invalid={!!error}
           aria-describedby={error ? `${errorId} ${hintId}` : hintId}
         />
@@ -75,7 +75,7 @@ export function CopyEditor({
           <p
             id={errorId}
             role="alert"
-            className="text-sm text-destructive"
+            className="text-sm leading-relaxed text-destructive"
           >
             {error}
           </p>
@@ -85,7 +85,7 @@ export function CopyEditor({
         <span
           id={hintId}
           className={cn(
-            "text-xs tabular-nums",
+            "text-xs tabular-nums leading-relaxed",
             isNearLimit ? "text-accent" : "text-muted-foreground"
           )}
           aria-live="polite"
