@@ -131,21 +131,22 @@ export function ImageUploader({
       <Label id="image-uploader-label" className={cn(errorMessage && "text-destructive")}>
         Logo (optional)
       </Label>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         {imageUrl ? (
-          <div className="flex items-center gap-3 rounded-xl border border-border bg-input p-3 shadow-sm transition-shadow duration-200 hover:shadow-card">
+          <div className="flex items-center gap-4 rounded-lg border border-border bg-input p-4 shadow-md transition-shadow duration-200 hover:shadow-card">
             <img
               src={imageUrl}
               alt="Uploaded logo preview"
               className="h-14 w-14 rounded-lg object-contain"
             />
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-2">
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 disabled={disabled || isBusy}
                 onClick={() => inputRef.current?.click()}
+                className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 aria-label="Change logo image"
                 aria-busy={isBusy}
               >
@@ -162,6 +163,7 @@ export function ImageUploader({
                   size="sm"
                   disabled={disabled || isBusy}
                   onClick={onClear}
+                  className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   aria-label="Remove logo"
                 >
                   Remove
@@ -176,7 +178,7 @@ export function ImageUploader({
             disabled={disabled || isBusy}
             onClick={() => inputRef.current?.click()}
             className={cn(
-              "h-24 w-full min-h-[6rem] flex-col gap-2 rounded-xl border-2 border-dashed border-border bg-input shadow-sm transition-all duration-200",
+              "h-24 w-full min-h-[6rem] flex-col gap-4 rounded-lg border-2 border-dashed border-border bg-input shadow-md transition-all duration-200",
               "hover:border-primary/40 hover:bg-primary/5 hover:shadow-card",
               "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               "md:flex-row"
@@ -187,13 +189,13 @@ export function ImageUploader({
           >
             {isBusy ? (
               <>
-                <Loader2 className="h-6 w-6 shrink-0 animate-spin text-muted-foreground" aria-hidden />
-                <span className="text-sm text-muted-foreground">Processing image…</span>
+                <Loader2 className="h-6 w-6 shrink-0 animate-spin text-foreground" aria-hidden />
+                <span className="text-sm text-foreground">Processing image…</span>
               </>
             ) : (
               <>
-                <Upload className="h-6 w-6 shrink-0 text-muted-foreground" aria-hidden />
-                <span className="text-sm text-muted-foreground">
+                <Upload className="h-6 w-6 shrink-0 text-foreground" aria-hidden />
+                <span className="text-sm text-foreground">
                   Upload logo (resized to 300px, PNG/JPEG/WebP, max 5MB)
                 </span>
               </>
