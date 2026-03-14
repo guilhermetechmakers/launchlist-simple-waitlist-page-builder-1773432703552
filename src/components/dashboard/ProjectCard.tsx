@@ -52,21 +52,21 @@ export function ProjectCard({
   // Error state: show message with design tokens (no hardcoded hex)
   if (error != null && String(error).trim() !== "") {
     return (
-      <Card className="border-destructive/50 bg-destructive/5 animate-fade-in-up">
-        <CardContent className="flex flex-col items-center justify-center gap-3 py-8 text-center">
+      <Card className="rounded-xl border border-destructive/50 bg-destructive/5 shadow-md animate-fade-in-up">
+        <CardContent className="flex flex-col items-center justify-center gap-4 py-8 text-center">
           <AlertCircle className={cn(CARD_ICON_SIZE, "text-destructive")} aria-hidden />
           <p className="text-sm font-medium text-foreground">Something went wrong</p>
-          <p className="text-xs text-muted-foreground">{String(error)}</p>
+          <p className="text-xs text-gray-600">{String(error)}</p>
         </CardContent>
       </Card>
     );
   }
 
-  // Loading state: skeleton matching card layout
+  // Loading state: skeleton matching card layout (spacing scale: 8px gap-2, 16px gap-4)
   if (isLoading) {
     return (
-      <Card className="flex flex-col overflow-hidden animate-fade-in-up">
-        <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+      <Card className="flex flex-col overflow-hidden rounded-xl shadow-md animate-fade-in-up">
+        <CardHeader className="flex flex-row items-start justify-between space-y-0 p-6 pb-4">
           <div className="flex-1 space-y-2 min-w-0">
             <Skeleton className="h-5 w-3/4 rounded-md" />
             <Skeleton className="h-4 w-full rounded-md" />
@@ -74,7 +74,7 @@ export function ProjectCard({
           </div>
           <Skeleton className="h-9 w-9 shrink-0 rounded-md" />
         </CardHeader>
-        <CardContent className="mt-auto flex flex-col gap-4">
+        <CardContent className="mt-auto flex flex-col gap-4 p-6 pt-0">
           <div className="flex flex-wrap gap-2">
             <Skeleton className="h-6 w-24 rounded-full" />
             <Skeleton className="h-6 w-14 rounded-full" />
@@ -84,7 +84,7 @@ export function ProjectCard({
             <Skeleton className="h-6 w-20 rounded-md" />
           </div>
           <Skeleton className="h-16 w-full rounded-xl" />
-          <div className="flex gap-2 pt-1">
+          <div className="flex gap-2 pt-2">
             <Skeleton className="h-9 flex-1 rounded-md" />
             <Skeleton className="h-9 w-24 rounded-md" />
           </div>
@@ -96,16 +96,16 @@ export function ProjectCard({
   return (
     <Card
       className={cn(
-        "flex flex-col transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card-hover animate-fade-in-up",
+        "flex flex-col rounded-xl shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg animate-fade-in-up",
         "group"
       )}
     >
-      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
-        <div className="flex-1 space-y-1.5 min-w-0">
+      <CardHeader className="flex flex-row items-start justify-between space-y-0 p-6 pb-4">
+        <div className="flex-1 space-y-2 min-w-0">
           <h3 className="font-heading text-lg font-semibold text-foreground truncate">
             {project.name ?? "Untitled"}
           </h3>
-          <p className="line-clamp-2 text-sm text-muted-foreground">
+          <p className="line-clamp-2 text-sm text-gray-600">
             {project.description ?? "No description"}
           </p>
         </div>
@@ -114,6 +114,7 @@ export function ProjectCard({
             <Button
               variant="ghost"
               size="icon"
+              className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               aria-label={`Open menu for ${name}`}
               aria-haspopup="menu"
             >
@@ -144,13 +145,13 @@ export function ProjectCard({
           </DropdownMenuContent>
         </DropdownMenu>
       </CardHeader>
-      <CardContent className="mt-auto flex flex-col gap-4">
+      <CardContent className="mt-auto flex flex-col gap-4 p-6 pt-0">
         <div className="flex flex-wrap items-center gap-2">
           <a
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center rounded-full border border-border bg-muted/50 px-2.5 py-0.5 text-xs font-medium text-foreground no-underline hover:bg-muted"
+            className="inline-flex items-center rounded-full border border-border bg-muted/50 px-2.5 py-0.5 text-xs font-medium text-foreground no-underline hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label={`View public waitlist page for ${name}`}
           >
             <ExternalLink className={cn("mr-1", CARD_ICON_SIZE)} aria-hidden />
@@ -161,12 +162,12 @@ export function ProjectCard({
               Public
             </span>
           ) : (
-            <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground">
+            <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-gray-600">
               Private
             </span>
           )}
           {hasLogo && (
-            <span className="rounded-full bg-accent/15 px-2.5 py-0.5 text-xs text-muted-foreground">
+            <span className="rounded-full bg-accent/15 px-2.5 py-0.5 text-xs text-gray-600">
               Logo
             </span>
           )}
@@ -184,8 +185,8 @@ export function ProjectCard({
           logoUrl={project.logo_url ?? undefined}
         />
 
-        <div className="flex gap-2 pt-1">
-          <Button variant="outline" size="sm" asChild className="flex-1">
+        <div className="flex gap-2 pt-2">
+          <Button variant="outline" size="sm" asChild className="flex-1 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
             <a
               href={url}
               target="_blank"
@@ -196,7 +197,7 @@ export function ProjectCard({
               View page
             </a>
           </Button>
-          <Button variant="outline" size="sm" asChild>
+          <Button variant="outline" size="sm" asChild className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
             <Link
               to={`/project/${project.id}/submissions`}
               aria-label={`View submissions for ${name}`}
