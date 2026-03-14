@@ -69,8 +69,7 @@ function PreviewBlock({
       role="article"
       aria-label="Waitlist page preview"
       className={cn(
-        "rounded-2xl border border-border bg-card p-6 shadow-card transition-shadow duration-200 hover:shadow-card-hover",
-        compact ? "p-4" : "p-6"
+        "rounded-xl border border-border bg-card p-6 shadow-md transition-shadow duration-200 hover:shadow-lg"
       )}
     >
       {/* Logo: empty state (placeholder), loading skeleton, loaded image, or error state */}
@@ -88,7 +87,7 @@ function PreviewBlock({
           {logoState === "error" && (
             <div
               className={cn(
-                "flex items-center gap-2 rounded-lg border border-border bg-muted/50 px-3 py-2 text-muted-foreground",
+                "flex items-center gap-2 rounded-lg border border-border bg-muted/50 px-3 py-2 text-foreground/80",
                 compact ? "h-10 text-xs" : "h-14 text-sm"
               )}
               role="status"
@@ -114,7 +113,7 @@ function PreviewBlock({
       ) : (
         <div
           className={cn(
-            "mb-4 flex items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-muted-foreground",
+            "mb-4 flex items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-foreground/70",
             compact ? "h-10" : "h-14"
           )}
           aria-hidden
@@ -133,7 +132,7 @@ function PreviewBlock({
       </h3>
       <p
         className={cn(
-          "mt-2 text-muted-foreground",
+          "mt-2 text-foreground/80",
           compact ? "text-xs line-clamp-2" : "mt-2 text-sm"
         )}
       >
@@ -145,12 +144,15 @@ function PreviewBlock({
           readOnly
           disabled
           aria-label="Email address for waitlist signup"
-          className={cn("flex-1 bg-[rgb(var(--input))]", compact && "h-9 text-sm")}
+          className={cn(
+            "flex-1 bg-[rgb(var(--input))] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+            compact && "h-9 text-sm"
+          )}
         />
         <Button
           size={compact ? "sm" : "sm"}
           className={cn(
-            "shrink-0 shadow-button transition-all duration-200 hover:scale-[1.02] hover:shadow-button-hover active:scale-[0.98]",
+            "shrink-0 shadow-button transition-all duration-200 hover:scale-[1.02] hover:shadow-button-hover active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
             !customColor && "bg-primary text-primary-foreground"
           )}
           style={
@@ -166,7 +168,7 @@ function PreviewBlock({
           Join
         </Button>
       </div>
-      <p className={cn("text-muted-foreground", compact ? "mt-2 text-xs" : "mt-3 text-xs")}>
+      <p className={cn("text-foreground/80", compact ? "mt-2 text-xs" : "mt-3 text-xs")}>
         Join {submissionsCount} others on the list
       </p>
     </article>
@@ -191,7 +193,7 @@ export function LivePreviewPanel({
       aria-labelledby="live-preview-heading"
       aria-describedby="live-preview-description"
     >
-      <Card className="overflow-hidden shadow-card transition-shadow duration-200 hover:shadow-card-hover">
+      <Card className="overflow-hidden shadow-md transition-shadow duration-200 hover:shadow-lg">
         <CardHeader>
           <h2
             id="live-preview-heading"
@@ -200,13 +202,13 @@ export function LivePreviewPanel({
             <Eye className="h-5 w-5 shrink-0 text-primary" aria-hidden />
             Live preview
           </h2>
-          <p id="live-preview-description" className="text-sm text-muted-foreground">
+          <p id="live-preview-description" className="text-sm text-foreground/80">
             Your public waitlist page
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="animate-fade-in" role="group" aria-label="Desktop preview">
-            <p className="mb-2 flex items-center gap-2 text-xs font-medium text-muted-foreground">
+            <p className="mb-2 flex items-center gap-2 text-xs font-medium text-foreground/80">
               <Monitor className="h-4 w-4 shrink-0" aria-hidden />
               Desktop
             </p>
@@ -220,7 +222,7 @@ export function LivePreviewPanel({
             />
           </div>
           <div className="animate-fade-in" role="group" aria-label="Mobile preview">
-            <p className="mb-2 flex items-center gap-2 text-xs font-medium text-muted-foreground">
+            <p className="mb-2 flex items-center gap-2 text-xs font-medium text-foreground/80">
               <Smartphone className="h-4 w-4 shrink-0" aria-hidden />
               Mobile
             </p>
@@ -237,7 +239,7 @@ export function LivePreviewPanel({
             </div>
           </div>
           <div
-            className="rounded-xl border border-border bg-surface-dark p-4 shadow-card"
+            className="rounded-xl border border-border bg-surface-dark p-4 shadow-md"
             role="region"
             aria-label="Social and Open Graph preview"
           >
