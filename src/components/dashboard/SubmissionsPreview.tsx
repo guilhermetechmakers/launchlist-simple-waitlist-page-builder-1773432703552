@@ -48,12 +48,12 @@ export function SubmissionsPreview({
     return (
       <Card
         className={cn(
-          "border-destructive/50 bg-destructive/5 transition-all duration-200",
+          "rounded-xl border border-destructive/50 bg-destructive/5 shadow-md transition-all duration-200",
           className
         )}
         aria-describedby="submissions-preview-error"
       >
-        <CardContent className="flex flex-row items-center gap-3 py-3 px-4">
+        <CardContent className="flex flex-row items-center gap-4 py-4 px-4">
           <AlertCircle
             className={cn(ICON_SIZE, "shrink-0 text-destructive")}
             aria-hidden
@@ -62,7 +62,7 @@ export function SubmissionsPreview({
             <Label id="submissions-preview-error" className="text-sm font-medium text-destructive">
               Could not load submission stats
             </Label>
-            <p className="mt-0.5 text-xs text-muted-foreground">{String(error)}</p>
+            <p className="mt-1 text-xs text-gray-600">{String(error)}</p>
           </div>
         </CardContent>
       </Card>
@@ -72,15 +72,15 @@ export function SubmissionsPreview({
   // Loading state: skeleton matching content layout
   if (isLoading) {
     return (
-      <Card className={cn("transition-all duration-200", className)} aria-busy="true" aria-label="Loading submission stats">
-        <CardContent className="flex flex-wrap items-center gap-x-4 gap-y-2 py-3 px-4">
-          <div className="flex items-center gap-2">
-            <Skeleton className={cn(ICON_SIZE, "rounded")} aria-hidden />
-            <Skeleton className="h-4 w-20 rounded-md" />
+      <Card className={cn("rounded-xl shadow-md transition-all duration-200", className)} aria-busy="true" aria-label="Loading submission stats">
+        <CardContent className="flex flex-wrap items-center gap-4 py-4 px-4">
+          <div className="flex items-center gap-4">
+            <Skeleton className={cn(ICON_SIZE, "rounded-lg")} aria-hidden />
+            <Skeleton className="h-4 w-20 rounded-lg" />
           </div>
-          <div className="flex items-center gap-2">
-            <Skeleton className={cn(ICON_SIZE, "rounded")} aria-hidden />
-            <Skeleton className="h-4 w-28 rounded-md" />
+          <div className="flex items-center gap-4">
+            <Skeleton className={cn(ICON_SIZE, "rounded-lg")} aria-hidden />
+            <Skeleton className="h-4 w-28 rounded-lg" />
           </div>
         </CardContent>
       </Card>
@@ -92,20 +92,20 @@ export function SubmissionsPreview({
     return (
       <Card
         className={cn(
-          "border-border bg-muted/30 transition-all duration-200",
+          "rounded-xl border border-border bg-muted/30 shadow-md transition-all duration-200",
           className
         )}
         role="region"
         aria-labelledby="submissions-preview-empty-label"
       >
-        <CardContent className="flex flex-row items-center gap-3 py-3 px-4">
+        <CardContent className="flex flex-row items-center gap-4 py-4 px-4">
           <Users
-            className={cn(ICON_SIZE, "shrink-0 text-muted-foreground")}
+            className={cn(ICON_SIZE, "shrink-0 text-gray-600")}
             aria-hidden
           />
           <Label
             id="submissions-preview-empty-label"
-            className="text-sm font-medium text-muted-foreground"
+            className="text-sm font-medium text-gray-600"
           >
             No signups yet
           </Label>
@@ -118,19 +118,19 @@ export function SubmissionsPreview({
   return (
     <Card
       className={cn(
-        "border-border bg-card transition-all duration-200 hover:shadow-card-hover",
+        "rounded-xl border border-border bg-card shadow-md transition-all duration-200 hover:shadow-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         className
       )}
       role="region"
       aria-label="Submission statistics"
     >
-      <CardContent className="flex flex-wrap items-center gap-x-4 gap-y-2 py-3 px-4">
-        <div className="flex items-center gap-2">
+      <CardContent className="flex flex-wrap items-center gap-4 py-4 px-4">
+        <div className="flex items-center gap-4">
           <Users
             className={cn(ICON_SIZE, "shrink-0 text-primary")}
             aria-hidden
           />
-          <span className="flex items-baseline gap-1.5 text-sm">
+          <span className="flex items-baseline gap-2 text-sm">
             <Label id="submissions-preview-signups-label" className="sr-only">
               Total signups
             </Label>
@@ -140,16 +140,16 @@ export function SubmissionsPreview({
             >
               {count}
             </span>
-            <span className="text-muted-foreground">signups</span>
+            <span className="text-gray-600">signups</span>
           </span>
         </div>
         {dateStr != null && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <CalendarClock
               className={cn(ICON_SIZE, "shrink-0 text-accent")}
               aria-hidden
             />
-            <span className="flex items-baseline gap-1.5 text-sm text-muted-foreground">
+            <span className="flex items-baseline gap-2 text-sm text-gray-600">
               <Label id="submissions-preview-last-label" className="sr-only">
                 Last signup date
               </Label>
