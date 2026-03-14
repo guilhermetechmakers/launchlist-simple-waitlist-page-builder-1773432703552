@@ -83,10 +83,10 @@ export function BrandingUploader({
   return (
     <div className={cn("space-y-2", className)}>
       <span className="text-sm font-medium text-foreground">Logo (optional)</span>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
         {logoUrl ? (
-          <Card className="w-full max-w-sm border-border bg-card shadow-card">
-            <CardContent className="flex flex-row items-center gap-4 p-4">
+          <Card className="w-full max-w-sm rounded-xl border-border bg-card shadow-card">
+            <CardContent className="flex flex-row items-center gap-6 p-6">
               <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-input">
                 <img
                   src={logoUrl}
@@ -98,7 +98,8 @@ export function BrandingUploader({
                 <Button
                   type="button"
                   variant="outline"
-                  size="sm"
+                  size="default"
+                  className="min-h-[44px] min-w-[44px] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   disabled={disabled || isPending}
                   onClick={() => inputRef.current?.click()}
                 >
@@ -111,7 +112,8 @@ export function BrandingUploader({
                 <Button
                   type="button"
                   variant="ghost"
-                  size="sm"
+                  size="default"
+                  className="min-h-[44px] min-w-[44px] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   disabled={disabled}
                   onClick={() => onLogoUrlChange("")}
                 >
@@ -125,27 +127,27 @@ export function BrandingUploader({
             <Label
               htmlFor={inputId}
               className={cn(
-                "flex min-h-[96px] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-input transition-colors hover:border-primary/40 hover:bg-primary/5 focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                "flex min-h-[96px] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-input transition-colors hover:border-primary/40 hover:bg-primary/5 focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
                 isPending && "pointer-events-none opacity-70"
               )}
             >
               {isPending ? (
                 <>
                   <Loader2
-                    className="h-6 w-6 animate-spin text-muted-foreground"
+                    className="h-6 w-6 animate-spin text-foreground/90"
                     aria-hidden
                   />
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-sm text-foreground/90">
                     Uploading…
                   </span>
                 </>
               ) : (
                 <>
                   <Upload
-                    className="h-6 w-6 text-muted-foreground"
+                    className="h-6 w-6 text-foreground/90"
                     aria-hidden
                   />
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-sm text-foreground/90">
                     {UPLOAD_LABEL}
                   </span>
                 </>
