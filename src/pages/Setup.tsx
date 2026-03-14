@@ -162,41 +162,41 @@ export default function Setup() {
               <Skeleton className="h-8 w-40 rounded-md" />
             </div>
             <div className="grid gap-8 lg:grid-cols-2">
-              <Card className="shadow-card">
-                <CardHeader>
-                  <Skeleton className="h-6 w-20 rounded-md" />
+              <Card className="rounded-xl border border-border bg-card shadow-md">
+                <CardHeader className="p-6 pb-4">
+                  <Skeleton className="h-6 w-20 rounded-lg" />
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 p-6 pt-0">
                   {[1, 2, 3, 4, 5, 6].map((i) => (
                     <div key={i} className="space-y-2">
-                      <Skeleton className="h-4 w-24 rounded-md" />
-                      <Skeleton className="h-10 w-full rounded-md" />
+                      <Skeleton className="h-4 w-24 rounded-lg" />
+                      <Skeleton className="h-10 w-full rounded-lg" />
                     </div>
                   ))}
-                  <div className="flex gap-2 pt-2">
-                    <Skeleton className="h-10 w-32 rounded-md" />
-                    <Skeleton className="h-10 w-24 rounded-md" />
+                  <div className="flex gap-4 pt-4">
+                    <Skeleton className="h-10 w-32 rounded-lg" />
+                    <Skeleton className="h-10 w-24 rounded-lg" />
                   </div>
                 </CardContent>
               </Card>
-              <div className="space-y-4">
-                <Card className="shadow-card">
-                  <CardHeader>
-                    <Skeleton className="h-6 w-24 rounded-md" />
-                    <Skeleton className="h-4 w-full max-w-xs rounded-md" />
+              <div className="flex flex-col gap-6">
+                <Card className="rounded-xl border border-border bg-card shadow-md">
+                  <CardHeader className="p-6 pb-4">
+                    <Skeleton className="h-6 w-24 rounded-lg" />
+                    <Skeleton className="h-4 w-full max-w-xs rounded-lg" />
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <Skeleton className="h-24 w-full rounded-lg" />
-                    <Skeleton className="h-12 w-full rounded-lg" />
+                  <CardContent className="space-y-4 p-6 pt-0">
+                    <Skeleton className="h-24 w-full rounded-xl" />
+                    <Skeleton className="h-12 w-full rounded-xl" />
                   </CardContent>
                 </Card>
-                <Card className="shadow-card">
-                  <CardHeader>
-                    <Skeleton className="h-6 w-28 rounded-md" />
-                    <Skeleton className="h-4 w-full max-w-sm rounded-md" />
+                <Card className="rounded-xl border border-border bg-card shadow-md">
+                  <CardHeader className="p-6 pb-4">
+                    <Skeleton className="h-6 w-28 rounded-lg" />
+                    <Skeleton className="h-4 w-full max-w-sm rounded-lg" />
                   </CardHeader>
-                  <CardContent>
-                    <Skeleton className="h-10 w-full rounded-md" />
+                  <CardContent className="p-6 pt-0">
+                    <Skeleton className="h-10 w-full rounded-lg" />
                   </CardContent>
                 </Card>
               </div>
@@ -213,20 +213,20 @@ export default function Setup() {
       <div className="flex min-h-screen flex-col">
         <Navbar />
         <main className="flex flex-1 flex-col items-center justify-center px-4 py-8">
-          <Card className="w-full max-w-md border-destructive/30 bg-destructive/5 shadow-card">
-            <CardContent className="flex flex-col items-center gap-4 pt-6 text-center">
+          <Card className="w-full max-w-md rounded-xl border border-destructive/30 bg-destructive/5 shadow-md">
+            <CardContent className="flex flex-col items-center gap-6 p-6 text-center">
               <AlertCircle className="h-12 w-12 text-destructive" aria-hidden />
               <h2 className="font-heading text-lg font-semibold text-foreground">
                 Could not load waitlist
               </h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-secondary">
                 {error instanceof Error ? error.message : "Something went wrong."}
               </p>
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={() => refetch()} aria-label="Retry loading waitlist">
+              <div className="flex gap-4">
+                <Button variant="outline" onClick={() => refetch()} className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" aria-label="Retry loading waitlist">
                   Retry
                 </Button>
-                <Button asChild>
+                <Button asChild className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                   <Link to="/dashboard" aria-label="Back to dashboard">
                     Back to Dashboard
                   </Link>
@@ -244,10 +244,10 @@ export default function Setup() {
       <Navbar />
       <main className="flex-1 px-4 py-8 md:px-6" role="main" aria-label={isEdit ? "Edit waitlist setup" : "Create new waitlist"}>
         <div className="mx-auto max-w-[1200px]">
-          <div className="mb-6 flex items-center gap-4">
-            <Button variant="ghost" size="sm" asChild aria-label="Back to dashboard">
+          <div className="mb-8 flex items-center gap-4">
+            <Button variant="ghost" size="sm" asChild className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" aria-label="Back to dashboard">
               <Link to="/dashboard">
-                <ArrowLeft className="mr-1.5 h-4 w-4" aria-hidden />
+                <ArrowLeft className="mr-2 h-4 w-4" aria-hidden />
                 Dashboard
               </Link>
             </Button>
@@ -257,15 +257,15 @@ export default function Setup() {
           </div>
 
           <div className="grid gap-8 lg:grid-cols-2">
-            <Card className="shadow-card">
-              <CardHeader>
-                <h2 className="font-heading text-lg font-semibold">Details</h2>
+            <Card className="rounded-xl border border-border bg-card shadow-md">
+              <CardHeader className="p-6 pb-4">
+                <h2 className="font-heading text-lg font-semibold text-foreground">Details</h2>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-6 pt-0">
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-4"
+                    className="flex flex-col gap-6"
                   >
                     <FormField
                       control={form.control}
@@ -362,10 +362,10 @@ export default function Setup() {
                       control={form.control}
                       name="is_public"
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between rounded-lg border border-border p-4">
-                          <div>
+                        <FormItem className="flex flex-row items-center justify-between rounded-xl border border-border p-4">
+                          <div className="space-y-1">
                             <FormLabel>Public</FormLabel>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-secondary">
                               Anyone with the link can join the waitlist.
                             </p>
                           </div>
@@ -373,16 +373,18 @@ export default function Setup() {
                             <Switch
                               checked={field.value}
                               onCheckedChange={field.onChange}
+                              className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                               aria-label="Allow anyone with the link to join the waitlist"
                             />
                           </FormControl>
                         </FormItem>
                       )}
                     />
-                    <div className="flex gap-2">
+                    <div className="flex gap-4 pt-2">
                       <Button
                         type="submit"
                         disabled={pending}
+                        className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                         aria-label={isEdit ? "Save and publish waitlist" : "Create and publish waitlist"}
                       >
                         {pending
@@ -397,6 +399,7 @@ export default function Setup() {
                           variant="outline"
                           disabled={publishProject.isPending}
                           onClick={() => publishProject.mutate(project.id)}
+                          className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                           aria-label="Publish waitlist to generate public link"
                         >
                           {publishProject.isPending ? "Publishing…" : "Publish"}
@@ -408,7 +411,7 @@ export default function Setup() {
               </CardContent>
             </Card>
 
-            <div className="space-y-4">
+            <div className="flex flex-col gap-6">
               <LivePreview
                 productName={watchName}
                 description={watchDescription}
