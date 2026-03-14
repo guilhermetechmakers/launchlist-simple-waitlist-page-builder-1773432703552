@@ -1,5 +1,7 @@
-import { useRef } from "react";
+import { useRef, useId } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useSignUpload } from "@/hooks/useSignUpload";
 import { Upload, Loader2 } from "lucide-react";
@@ -7,6 +9,8 @@ import { toast } from "sonner";
 
 const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"];
 const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
+
+const UPLOAD_LABEL = "Upload logo (PNG, JPEG, WebP, max 5MB)";
 
 export interface BrandingUploaderProps {
   logoUrl: string | undefined;
@@ -23,6 +27,8 @@ export function BrandingUploader({
 }: BrandingUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const signUpload = useSignUpload();
+  // Stable id for file input so the label can be associated for screen readers
+  const inputId = useId();
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -70,70 +76,112 @@ export function BrandingUploader({
     }
   };
 
+  const isPending = signUpload.isPending;
+  const isError = signUpload.isError;
+  const errorMessage = signUpload.error instanceof Error ? signUpload.error.message : null;
+
   return (
     <div className={cn("space-y-2", className)}>
-      <label className="text-sm font-medium text-foreground">Logo (optional)</label>
+      <span className="text-sm font-medium text-foreground">Logo (optional)</span>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         {logoUrl ? (
-          <div className="flex items-center gap-3 rounded-xl border border-border bg-[rgb(var(--input))] p-3">
-            <img
-              src={logoUrl}
-              alt="Logo"
-              className="h-14 w-14 rounded-lg object-contain"
-            />
-            <div className="flex flex-col gap-1">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                disabled={disabled || signUpload.isPending}
-                onClick={() => inputRef.current?.click()}
-              >
-                {signUpload.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  "Change"
-                )}
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                disabled={disabled}
-                onClick={() => onLogoUrlChange("")}
-              >
-                Remove
-              </Button>
-            </div>
-          </div>
+          <Card className="w-full max-w-sm border-border bg-card shadow-card">
+            <CardContent className="flex flex-row items-center gap-4 p-4">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-input">
+                <img
+                  src={logoUrl}
+                  alt="Uploaded logo"
+                  className="h-full w-full object-contain"
+                />
+              </div>
+              <div className="flex min-h-[44px] flex-col justify-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={disabled || isPending}
+                  onClick={() => inputRef.current?.click()}
+                >
+                  {isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                  ) : (
+                    "Change"
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  disabled={disabled}
+                  onClick={() => onLogoUrlChange("")}
+                >
+                  Remove
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         ) : (
-          <button
-            type="button"
-            disabled={disabled || signUpload.isPending}
-            onClick={() => inputRef.current?.click()}
-            className="flex h-24 w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-[rgb(var(--input))] transition-colors hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
-          >
-            {signUpload.isPending ? (
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-            ) : (
-              <>
-                <Upload className="h-6 w-6 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">
-                  Upload logo (PNG, JPEG, WebP, max 5MB)
-                </span>
-              </>
-            )}
-          </button>
+          <>
+            <Label
+              htmlFor={inputId}
+              className={cn(
+                "flex min-h-[96px] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-input transition-colors hover:border-primary/40 hover:bg-primary/5 focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                isPending && "pointer-events-none opacity-70"
+              )}
+            >
+              {isPending ? (
+                <>
+                  <Loader2
+                    className="h-6 w-6 animate-spin text-muted-foreground"
+                    aria-hidden
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    Uploading…
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Upload
+                    className="h-6 w-6 text-muted-foreground"
+                    aria-hidden
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    {UPLOAD_LABEL}
+                  </span>
+                </>
+              )}
+            </Label>
+            {/* When no logo, the Label above wraps the dropzone and is the accessible name for the input */}
+          </>
         )}
+
+        {/* When logo is set, the input has no visible label; provide an sr-only label so the input still has an accessible name when triggered by "Change" */}
+        {logoUrl && (
+          <Label htmlFor={inputId} className="sr-only">
+            {UPLOAD_LABEL}
+          </Label>
+        )}
+
         <input
+          id={inputId}
           ref={inputRef}
           type="file"
           accept={ALLOWED_TYPES.join(",")}
-          className="hidden"
-          aria-hidden
+          className="sr-only"
+          disabled={disabled}
           onChange={handleFileSelect}
         />
       </div>
+
+      {/* Inline error state: show mutation error so users see feedback in context */}
+      {isError && errorMessage && (
+        <p
+          role="alert"
+          className="text-sm text-destructive"
+        >
+          {errorMessage}
+        </p>
+      )}
     </div>
   );
 }
