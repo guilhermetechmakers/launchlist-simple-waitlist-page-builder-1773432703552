@@ -1,8 +1,10 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DEFAULT_BUTTON_COLOR } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
-const DEFAULT_COLOR = "#D6FF2A";
+/** Default button color from design system (neon primary); single source of truth. */
+const DEFAULT_COLOR = DEFAULT_BUTTON_COLOR;
 const HEX_REGEX = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
 
 function normalizeHex(value: string): string {
@@ -36,12 +38,12 @@ export function ButtonColorPicker({
   const displayValue = value?.trim() || DEFAULT_COLOR;
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn("space-y-4", className)}>
       <Label>Button color</Label>
-      <div className="flex gap-2">
+      <div className="flex gap-4">
         <Input
           type="text"
-          placeholder="#D6FF2A"
+          placeholder={DEFAULT_BUTTON_COLOR}
           value={displayValue}
           onChange={(e) => {
             const next = e.target.value;
@@ -61,7 +63,7 @@ export function ButtonColorPicker({
             else onChange(DEFAULT_COLOR);
           }}
           disabled={disabled}
-          className="font-mono"
+          className="font-mono rounded-lg focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-0"
           aria-invalid={!!error}
           aria-describedby={error ? "button-color-error" : undefined}
         />
@@ -70,7 +72,7 @@ export function ButtonColorPicker({
           value={hex}
           onChange={(e) => onChange(e.target.value.toLowerCase())}
           disabled={disabled}
-          className="h-11 w-14 cursor-pointer rounded-xl border border-border bg-transparent"
+          className="h-11 w-14 cursor-pointer rounded-lg border border-border bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2"
           aria-label="Pick button color"
         />
       </div>
