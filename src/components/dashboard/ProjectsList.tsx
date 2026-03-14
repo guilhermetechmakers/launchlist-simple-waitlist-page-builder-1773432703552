@@ -38,7 +38,7 @@ export function ProjectsList({
     const skeletonCount = 6;
     return (
       <Card
-        className="mt-8 border-border bg-card shadow-card"
+        className="mt-8 border-border bg-card shadow-lg"
         role="status"
         aria-label="Loading waitlist projects"
         aria-busy="true"
@@ -46,7 +46,7 @@ export function ProjectsList({
       >
         <CardContent className="pt-6">
           <p className="sr-only">Loading waitlist projects…</p>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: skeletonCount }, (_, i) => (
               <ProjectCardSkeleton key={i} />
             ))}
@@ -68,7 +68,7 @@ export function ProjectsList({
           <p className="mt-4 text-center font-medium text-foreground">
             Something went wrong
           </p>
-          <p className="mt-1 text-center text-sm text-muted-foreground max-w-sm">
+          <p className="mt-1 text-center text-sm text-foreground/80 max-w-sm">
             {error}
           </p>
         </CardContent>
@@ -87,18 +87,18 @@ export function ProjectsList({
       >
         <CardContent className="flex flex-col items-center justify-center px-6 text-center">
           <FolderPlus
-            className="h-12 w-12 text-muted-foreground"
+            className="h-12 w-12 text-foreground/80"
             aria-hidden
           />
           <p className="mt-4 font-medium text-foreground">
             No waitlists yet
           </p>
-          <p className="mt-1 max-w-sm text-sm text-muted-foreground">
+          <p className="mt-1 max-w-sm text-sm text-foreground/80">
             Create your first waitlist to start collecting signups.
           </p>
           {typeof onCreateNew === "function" && (
             <Button
-              className="mt-6 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              className="mt-6 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               onClick={onCreateNew}
             >
               Create your first waitlist
@@ -110,9 +110,9 @@ export function ProjectsList({
   }
 
   return (
-    <Card className="mt-8" role="list" aria-label="Waitlist projects">
+    <Card className="mt-8 border-border bg-card shadow-lg" role="list" aria-label="Waitlist projects">
       <CardContent className="pt-6">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {safeMap(list, (project) => (
             <div key={project.id} role="listitem">
               <ProjectCard
@@ -130,18 +130,18 @@ export function ProjectsList({
 
 function ProjectCardSkeleton() {
   return (
-    <Card className="border-border bg-card overflow-hidden">
+    <Card className="border-border bg-card overflow-hidden rounded-lg shadow-md">
       <CardHeader className="space-y-2">
-        <Skeleton className="h-5 w-3/4 rounded-md bg-muted" />
-        <Skeleton className="h-4 w-full rounded-md bg-muted" />
-        <Skeleton className="h-3 w-1/2 rounded-md bg-muted" />
+        <Skeleton className="h-5 w-3/4 rounded-lg bg-muted" />
+        <Skeleton className="h-4 w-full rounded-lg bg-muted" />
+        <Skeleton className="h-3 w-1/2 rounded-lg bg-muted" />
       </CardHeader>
       <CardContent className="space-y-3">
         <Skeleton className="h-8 w-full rounded-lg bg-muted" />
         <Skeleton className="h-16 w-full rounded-xl bg-muted" />
         <div className="flex gap-2 pt-1">
-          <Skeleton className="h-9 flex-1 rounded-md bg-muted" />
-          <Skeleton className="h-9 w-24 rounded-md bg-muted" />
+          <Skeleton className="h-9 flex-1 rounded-lg bg-muted" />
+          <Skeleton className="h-9 w-24 rounded-lg bg-muted" />
         </div>
       </CardContent>
     </Card>
