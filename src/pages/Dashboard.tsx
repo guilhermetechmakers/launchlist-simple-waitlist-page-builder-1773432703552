@@ -154,14 +154,15 @@ export default function Dashboard() {
             />
             {totalPages > 1 && (
               <nav
-                className="mt-8 flex items-center justify-center gap-2"
+                className="mt-8 flex items-center justify-center gap-4"
                 role="navigation"
                 aria-label="Waitlist projects pagination"
               >
                 <Button
                   type="button"
                   variant="outline"
-                  size="sm"
+                  size="default"
+                  className="min-h-[44px] px-6"
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage <= 1}
                   aria-label="Previous page"
@@ -178,7 +179,8 @@ export default function Dashboard() {
                 <Button
                   type="button"
                   variant="outline"
-                  size="sm"
+                  size="default"
+                  className="min-h-[44px] px-6"
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage >= totalPages}
                   aria-label="Next page"
