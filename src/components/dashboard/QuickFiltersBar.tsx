@@ -26,6 +26,9 @@ const VISIBILITY_OPTIONS: { value: VisibilityFilter; label: string }[] = [
   { value: "private", label: "Private" },
 ];
 
+const selectBaseClasses =
+  "h-9 rounded-xl border border-border bg-input px-3 text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+
 export function QuickFiltersBar({
   searchQuery,
   sortKey,
@@ -38,7 +41,7 @@ export function QuickFiltersBar({
   return (
     <div
       className={cn(
-        "mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6",
+        "mt-6 flex flex-col gap-6 rounded-xl border border-border bg-background p-4 shadow-sm sm:flex-row sm:items-center sm:gap-8",
         className
       )}
       role="search"
@@ -49,16 +52,16 @@ export function QuickFiltersBar({
         placeholder="Search by name or slug…"
         value={searchQuery}
         onChange={(e) => onQueryChange(e.target.value)}
-        className="max-w-sm border-border bg-input text-foreground"
+        className="max-w-sm border-border bg-input text-foreground shadow-sm focus-visible:ring-ring focus-visible:ring-offset-2"
         aria-label="Search waitlist projects by name or slug"
       />
-      <div className="flex flex-wrap items-center gap-4">
-        <label className="flex items-center gap-2 text-sm text-muted-foreground">
+      <div className="flex flex-wrap items-center gap-6">
+        <label className="flex items-center gap-2 text-sm text-secondary">
           <span>Sort</span>
           <select
             value={sortKey}
             onChange={(e) => onSortChange(e.target.value as SortKey)}
-            className="h-9 rounded-lg border border-border bg-input px-3 text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+            className={selectBaseClasses}
             aria-label="Sort waitlist projects by"
           >
             {SORT_OPTIONS.map((opt) => (
@@ -68,12 +71,12 @@ export function QuickFiltersBar({
             ))}
           </select>
         </label>
-        <label className="flex items-center gap-2 text-sm text-muted-foreground">
+        <label className="flex items-center gap-2 text-sm text-secondary">
           <span>Visibility</span>
           <select
             value={visibilityFilter}
             onChange={(e) => onVisibilityChange(e.target.value as VisibilityFilter)}
-            className="h-9 rounded-lg border border-border bg-input px-3 text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+            className={selectBaseClasses}
             aria-label="Filter waitlist projects by visibility"
           >
             {VISIBILITY_OPTIONS.map((opt) => (
