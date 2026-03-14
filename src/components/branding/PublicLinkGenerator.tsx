@@ -70,7 +70,7 @@ export function PublicLinkGenerator({
     return (
       <Card
         className={cn(
-          "shadow-card border-border bg-card text-card-foreground",
+          "shadow-md border-border bg-card text-card-foreground rounded-xl",
           className
         )}
         aria-labelledby="public-link-empty-title"
@@ -82,21 +82,21 @@ export function PublicLinkGenerator({
           >
             Public link
           </TitleTag>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-gray-600">
             Add a URL slug in the form above to generate your public waitlist link.
           </p>
         </CardHeader>
         <CardContent>
           <div
-            className="flex min-h-[120px] flex-col items-center justify-center rounded-lg border border-dashed border-border bg-[rgb(var(--input))] px-4 py-6 text-center"
+            className="flex min-h-[120px] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-background p-6 text-center"
             role="status"
             aria-label="Waiting for slug"
           >
             <Link2
-              className={cn(ICON_SIZE, "text-muted-foreground")}
+              className={cn(ICON_SIZE, "text-gray-600")}
               aria-hidden
             />
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="mt-2 text-sm text-gray-600">
               Your shareable link will appear here once you save a slug.
             </p>
           </div>
@@ -108,7 +108,7 @@ export function PublicLinkGenerator({
   return (
     <Card
       className={cn(
-        "shadow-card border-border bg-card text-card-foreground transition-shadow duration-200 hover:shadow-card-hover",
+        "shadow-md border-border bg-card text-card-foreground rounded-xl transition-shadow duration-200 hover:shadow-lg",
         className
       )}
       aria-labelledby="public-link-title"
@@ -120,16 +120,16 @@ export function PublicLinkGenerator({
         >
           Public link
         </TitleTag>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-gray-600">
           Share this link so visitors can join your waitlist.
         </p>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-4">
         <div className="flex flex-wrap gap-2 sm:flex-nowrap">
           <Input
             readOnly
             value={urlWithVersion}
-            className="min-h-11 flex-1 font-mono text-sm text-foreground placeholder:text-muted-foreground"
+            className="min-h-11 flex-1 font-mono text-sm text-foreground placeholder:text-gray-500 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label="Public waitlist URL"
           />
           <Button
@@ -139,7 +139,7 @@ export function PublicLinkGenerator({
             onClick={handleCopy}
             disabled={!urlWithVersion}
             aria-label="Copy link"
-            className="min-h-[44px] min-w-[44px] shrink-0 transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
+            className="min-h-[44px] min-w-[44px] shrink-0 transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             {copied ? (
               <Check className={cn(ICON_SIZE, "text-primary")} aria-hidden />
@@ -164,7 +164,7 @@ export function PublicLinkGenerator({
             href={urlWithVersion}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-[44px] min-w-[44px] items-center gap-2 self-start rounded-md px-1 py-2 text-sm text-primary outline-none transition-colors duration-200 hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="inline-flex min-h-[44px] min-w-[44px] items-center gap-2 self-start rounded-lg px-2 py-2 text-sm text-primary outline-none transition-colors duration-200 hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label="Open public waitlist in new tab"
           >
             <ExternalLink className={cn(ICON_SIZE, "shrink-0")} aria-hidden />
