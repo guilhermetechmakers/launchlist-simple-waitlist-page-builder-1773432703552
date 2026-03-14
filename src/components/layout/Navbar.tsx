@@ -33,15 +33,15 @@ export function Navbar() {
 
   return (
     <header
-      className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="sticky top-0 z-40 w-full border-b border-border bg-background/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60"
       role="banner"
     >
-      <div className="mx-auto flex h-14 max-w-[1200px] items-center justify-between px-4 md:px-6">
+      <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-4 md:px-6">
         {/* Site title as h1 for logical heading hierarchy and accessibility */}
         <h1 className="m-0 flex shrink-0 text-lg font-heading font-bold leading-none">
           <Link
             to="/"
-            className="text-foreground no-underline transition-opacity hover:opacity-90 focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="text-foreground no-underline transition-opacity hover:opacity-90 focus-visible:rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label="LaunchList home"
           >
             LaunchList
@@ -57,8 +57,8 @@ export function Navbar() {
               key={to}
               to={to}
               className={cn(
-                "text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                location.pathname === to && "text-foreground"
+                "text-sm font-medium transition-colors focus-visible:rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                location.pathname === to ? "text-foreground" : "text-foreground/80 hover:text-foreground"
               )}
             >
               {label}
@@ -66,10 +66,10 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {showAuthLoading ? (
             <div
-              className="h-9 w-20 animate-pulse rounded-button bg-muted/50"
+              className="h-9 w-20 animate-pulse rounded-lg bg-muted/50"
               aria-hidden
               role="presentation"
             />
@@ -99,14 +99,14 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 aria-label="Open menu"
-                className="min-h-[44px] min-w-[44px] touch-manipulation"
+                className="min-h-[44px] min-w-[44px] touch-manipulation focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg"
               >
                 <Menu className="h-5 w-5" aria-hidden />
               </Button>
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="w-[280px] border-border bg-card"
+              className="w-[280px] border-border bg-card rounded-lg shadow-lg"
             >
               <nav
                 className="flex flex-col gap-6 pt-8"
@@ -117,7 +117,7 @@ export function Navbar() {
                     key={to}
                     to={to}
                     onClick={() => setOpen(false)}
-                    className="text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+                    className="rounded-lg text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
                     {label}
                   </Link>
@@ -127,14 +127,14 @@ export function Navbar() {
                     <Link
                       to="/dashboard"
                       onClick={() => setOpen(false)}
-                      className="text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+                      className="rounded-lg text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
                       Dashboard
                     </Link>
                     <Link
                       to="/profile"
                       onClick={() => setOpen(false)}
-                      className="text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+                      className="rounded-lg text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
                       Profile
                     </Link>
@@ -144,14 +144,14 @@ export function Navbar() {
                     <Link
                       to="/login"
                       onClick={() => setOpen(false)}
-                      className="text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+                      className="rounded-lg text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
                       Log in
                     </Link>
                     <Link
                       to="/signup"
                       onClick={() => setOpen(false)}
-                      className="text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+                      className="rounded-lg text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
                       Get started
                     </Link>
