@@ -47,10 +47,10 @@ export default function Signup() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
       <main className="flex flex-1 items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md animate-fade-in-up">
+        <Card className="w-full max-w-md animate-fade-in-up rounded-xl shadow-lg">
           <CardHeader>
             <CardTitle>Create an account</CardTitle>
             <CardDescription>
@@ -59,7 +59,7 @@ export default function Signup() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
                   name="fullName"
@@ -104,9 +104,12 @@ export default function Signup() {
                 </Button>
               </form>
             </Form>
-            <p className="mt-6 text-center text-sm text-muted-foreground">
+            <p className="mt-6 text-center text-sm text-secondary">
               Already have an account?{" "}
-              <Link to="/login" className="font-medium text-primary hover:underline">
+              <Link
+                to="/login"
+                className="inline-flex items-center font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 rounded-md transition-colors"
+              >
                 Log in
               </Link>
             </p>
