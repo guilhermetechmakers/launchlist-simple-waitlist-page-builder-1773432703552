@@ -43,7 +43,7 @@ export default function Submissions() {
 
   if (projectLoading || !id) {
     return (
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col bg-background">
         <Navbar />
         <main className="flex-1 p-8">
           <Skeleton className="h-8 w-48" />
@@ -55,11 +55,11 @@ export default function Submissions() {
 
   if (!project) {
     return (
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col bg-background">
         <Navbar />
         <main className="flex flex-1 items-center justify-center p-8">
-          <p className="text-muted-foreground">Project not found.</p>
-          <Button asChild className="mt-4" aria-label="Go back to dashboard">
+          <p className="text-gray-600">Project not found.</p>
+          <Button asChild className="mt-4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" aria-label="Go back to dashboard">
             <Link to="/dashboard">Dashboard</Link>
           </Button>
         </main>
@@ -68,13 +68,13 @@ export default function Submissions() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
       <main className="flex-1 px-4 py-8 md:px-6">
         <div className="mx-auto max-w-[1200px]">
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" asChild aria-label="Back to dashboard">
+              <Button variant="ghost" size="sm" asChild className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" aria-label="Back to dashboard">
                 <Link to="/dashboard">
                   <ArrowLeft className="mr-1 h-4 w-4" aria-hidden />
                   Dashboard
@@ -90,7 +90,7 @@ export default function Submissions() {
               aria-label="Export submissions as CSV"
               onClick={() => id && exportCsv.mutate({ projectId: id, from: from || undefined, to: to || undefined })}
               disabled={exportCsv.isPending || !id}
-              className="transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              className="transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <Download className="mr-2 h-4 w-4" aria-hidden />
               Export CSV
@@ -99,13 +99,13 @@ export default function Submissions() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <h2 className="font-heading text-lg font-semibold">Signups</h2>
-              <span className="text-sm text-muted-foreground" aria-live="polite">
+              <h2 className="font-heading text-lg font-semibold text-foreground">Signups</h2>
+              <span className="text-sm text-gray-600" aria-live="polite">
                 {entryList.length} total
               </span>
             </CardHeader>
             <CardContent>
-              <div className="mb-4 flex flex-wrap gap-4">
+              <div className="mb-6 flex flex-wrap gap-4">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="filter-from" className="text-sm">
                     From
@@ -139,7 +139,7 @@ export default function Submissions() {
                 <div
                   role="alert"
                   className={cn(
-                    "mb-4 flex flex-wrap items-center gap-3 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm",
+                    "mb-6 flex flex-wrap items-center gap-4 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-4 text-sm",
                     "animate-fade-in"
                   )}
                 >
@@ -154,7 +154,7 @@ export default function Submissions() {
                     size="sm"
                     onClick={() => refetchSubmissions()}
                     aria-label="Retry loading submissions"
-                    className="shrink-0 border-destructive/30 text-destructive hover:bg-destructive/10"
+                    className="shrink-0 border-destructive/30 text-destructive hover:bg-destructive/10 focus-visible:ring-2 focus-visible:ring-destructive/30 focus-visible:ring-offset-2"
                   >
                     <RefreshCw className="mr-2 h-4 w-4" aria-hidden />
                     Try again
@@ -164,17 +164,17 @@ export default function Submissions() {
 
               {/* Loading: table-shaped skeleton for entries */}
               {entriesLoading && (
-                <div className="space-y-3" aria-busy="true" aria-label="Loading submissions">
-                  <div className="flex gap-4 border-b border-border pb-3">
-                    <Skeleton className="h-5 w-32" />
-                    <Skeleton className="h-5 w-24" />
-                    <Skeleton className="h-5 w-28" />
+                <div className="space-y-4" aria-busy="true" aria-label="Loading submissions">
+                  <div className="flex gap-4 border-b border-border pb-4">
+                    <Skeleton className="h-5 w-32 rounded-lg" />
+                    <Skeleton className="h-5 w-24 rounded-lg" />
+                    <Skeleton className="h-5 w-28 rounded-lg" />
                   </div>
                   {Array.from({ length: SKELETON_ROW_COUNT }).map((_, i) => (
                     <div key={i} className="flex gap-4 py-2">
-                      <Skeleton className="h-5 flex-1 max-w-[200px]" />
-                      <Skeleton className="h-5 w-20" />
-                      <Skeleton className="h-5 w-24" />
+                      <Skeleton className="h-5 flex-1 max-w-[200px] rounded-lg" />
+                      <Skeleton className="h-5 w-20 rounded-lg" />
+                      <Skeleton className="h-5 w-24 rounded-lg" />
                     </div>
                   ))}
                 </div>
@@ -187,14 +187,14 @@ export default function Submissions() {
                   role="status"
                   aria-label="No submissions yet"
                 >
-                  <Inbox className="h-12 w-12 text-muted-foreground" aria-hidden />
+                  <Inbox className="h-12 w-12 text-gray-600" aria-hidden />
                   <p className="mt-4 font-medium text-foreground">No submissions yet</p>
-                  <p className="mt-1 max-w-sm text-sm text-muted-foreground">
+                  <p className="mt-2 max-w-sm text-sm text-gray-600">
                     Share your waitlist link to start collecting signups.
                   </p>
                   <Button
                     asChild
-                    className="mt-6 bg-primary text-primary-foreground transition-all duration-200 hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2"
+                    className="mt-6 bg-primary text-primary-foreground transition-all duration-200 hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                   >
                     <Link to={`/setup/${id}`} aria-label="View setup and get your waitlist link">
                       View setup & get link
@@ -219,11 +219,11 @@ export default function Submissions() {
                   <TableBody>
                     {entryList.map((entry) => (
                       <TableRow key={entry.id}>
-                        <TableCell className="font-medium">{entry.email}</TableCell>
-                        <TableCell className="text-muted-foreground">
+                        <TableCell className="font-medium text-foreground">{entry.email}</TableCell>
+                        <TableCell className="text-gray-600">
                           {entry.referrer ?? "—"}
                         </TableCell>
-                        <TableCell className="text-muted-foreground text-sm">
+                        <TableCell className="text-sm text-gray-600">
                           {format(new Date(entry.created_at), "MMM d, yyyy HH:mm")}
                         </TableCell>
                         <TableCell>
