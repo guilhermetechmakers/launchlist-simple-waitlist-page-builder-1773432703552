@@ -7,17 +7,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ExternalLink, List, MoreHorizontal, Pencil, Download } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AlertCircle, ExternalLink, List, MoreHorizontal, Pencil, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DEFAULT_BUTTON_COLOR } from "@/lib/design-tokens";
 import { BrandingPreview } from "./BrandingPreview";
 import { SubmissionsPreview } from "./SubmissionsPreview";
 import type { DashboardProject } from "@/types/project";
 
+/** Consistent icon size for all card icons (design system) */
+const CARD_ICON_SIZE = "h-4 w-4";
+
 export interface ProjectCardProps {
   project: DashboardProject;
   onExport?: (projectId: string) => void;
   isExporting?: boolean;
+  /** When true, renders a skeleton card instead of content */
+  isLoading?: boolean;
+  /** When set, shows an error state with message */
+  error?: string | null;
 }
 
 function publicUrl(slug: string): string {
@@ -25,7 +33,13 @@ function publicUrl(slug: string): string {
   return `${window.location.origin}/r/${slug}`;
 }
 
-export function ProjectCard({ project, onExport, isExporting }: ProjectCardProps) {
+export function ProjectCard({
+  project,
+  onExport,
+  isExporting,
+  isLoading = false,
+  error = null,
+}: ProjectCardProps) {
   const slug = project.slug ?? "";
   const name = project.name ?? "Untitled";
   const url = project.url ?? publicUrl(slug);
@@ -34,6 +48,50 @@ export function ProjectCard({ project, onExport, isExporting }: ProjectCardProps
   const isPublic = project.is_public ?? true;
   const hasLogo = project.hasLogo ?? !!project.logo_url;
   const color = project.color ?? project.button_color ?? DEFAULT_BUTTON_COLOR;
+
+  // Error state: show message with design tokens (no hardcoded hex)
+  if (error != null && String(error).trim() !== "") {
+    return (
+      <Card className="border-destructive/50 bg-destructive/5 animate-fade-in-up">
+        <CardContent className="flex flex-col items-center justify-center gap-3 py-8 text-center">
+          <AlertCircle className={cn(CARD_ICON_SIZE, "text-destructive")} aria-hidden />
+          <p className="text-sm font-medium text-foreground">Something went wrong</p>
+          <p className="text-xs text-muted-foreground">{String(error)}</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Loading state: skeleton matching card layout
+  if (isLoading) {
+    return (
+      <Card className="flex flex-col overflow-hidden animate-fade-in-up">
+        <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+          <div className="flex-1 space-y-2 min-w-0">
+            <Skeleton className="h-5 w-3/4 rounded-md" />
+            <Skeleton className="h-4 w-full rounded-md" />
+            <Skeleton className="h-4 w-2/3 rounded-md" />
+          </div>
+          <Skeleton className="h-9 w-9 shrink-0 rounded-md" />
+        </CardHeader>
+        <CardContent className="mt-auto flex flex-col gap-4">
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-6 w-24 rounded-full" />
+            <Skeleton className="h-6 w-14 rounded-full" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-6 flex-1 rounded-md" />
+            <Skeleton className="h-6 w-20 rounded-md" />
+          </div>
+          <Skeleton className="h-16 w-full rounded-xl" />
+          <div className="flex gap-2 pt-1">
+            <Skeleton className="h-9 flex-1 rounded-md" />
+            <Skeleton className="h-9 w-24 rounded-md" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card
@@ -59,19 +117,19 @@ export function ProjectCard({ project, onExport, isExporting }: ProjectCardProps
               aria-label={`Open menu for ${name}`}
               aria-haspopup="menu"
             >
-              <MoreHorizontal className="h-4 w-4" />
+              <MoreHorizontal className={CARD_ICON_SIZE} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
               <Link to={`/setup/${project.id}`}>
-                <Pencil className="mr-2 h-4 w-4" />
+                <Pencil className={cn("mr-2", CARD_ICON_SIZE)} />
                 Edit
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link to={`/project/${project.id}/submissions`}>
-                <List className="mr-2 h-4 w-4" />
+                <List className={cn("mr-2", CARD_ICON_SIZE)} />
                 View submissions
               </Link>
             </DropdownMenuItem>
@@ -80,7 +138,7 @@ export function ProjectCard({ project, onExport, isExporting }: ProjectCardProps
               disabled={isExporting}
               aria-label={isExporting ? "Exporting CSV…" : `Export submissions as CSV for ${name}`}
             >
-              <Download className="mr-2 h-4 w-4" aria-hidden />
+              <Download className={cn("mr-2", CARD_ICON_SIZE)} aria-hidden />
               Export CSV
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -95,7 +153,7 @@ export function ProjectCard({ project, onExport, isExporting }: ProjectCardProps
             className="inline-flex items-center rounded-full border border-border bg-muted/50 px-2.5 py-0.5 text-xs font-medium text-foreground no-underline hover:bg-muted"
             aria-label={`View public waitlist page for ${name}`}
           >
-            <ExternalLink className="mr-1 h-3 w-3" aria-hidden />
+            <ExternalLink className={cn("mr-1", CARD_ICON_SIZE)} aria-hidden />
             /r/{slug || "…"}
           </a>
           {isPublic ? (
@@ -134,7 +192,7 @@ export function ProjectCard({ project, onExport, isExporting }: ProjectCardProps
               rel="noopener noreferrer"
               aria-label={`View public page for ${name}`}
             >
-              <ExternalLink className="mr-1 h-3 w-3" aria-hidden />
+              <ExternalLink className={cn("mr-1", CARD_ICON_SIZE)} aria-hidden />
               View page
             </a>
           </Button>
