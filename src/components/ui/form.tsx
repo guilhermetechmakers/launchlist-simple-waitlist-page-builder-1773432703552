@@ -74,6 +74,7 @@ const FormItemContext = React.createContext<FormItemContextValue>(
   {} as FormItemContextValue
 );
 
+/** FormItem uses design system spacing: gap-2 = 8px (scale). */
 const FormItem = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -81,7 +82,11 @@ const FormItem = React.forwardRef<
   const id = React.useId();
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("space-y-2", className)} {...props} />
+      <div
+        ref={ref}
+        className={cn("flex flex-col gap-2", className)}
+        {...props}
+      />
     </FormItemContext.Provider>
   );
 });
@@ -221,11 +226,12 @@ export interface FormSectionProps extends React.HTMLAttributes<HTMLElement> {
   "aria-labelledby"?: string;
 }
 
+/** Section spacing uses design scale: 16px / 24px (gap-4 / gap-6). */
 const FormSection = React.forwardRef<HTMLElement, FormSectionProps>(
   ({ className, children, ...props }, ref) => (
     <section
       ref={ref as React.Ref<HTMLElement>}
-      className={cn("space-y-4 sm:space-y-6", className)}
+      className={cn("flex flex-col gap-4 sm:gap-6", className)}
       {...props}
     >
       {children}
@@ -250,13 +256,13 @@ const FormTextarea = React.forwardRef<
 ));
 FormTextarea.displayName = "FormTextarea";
 
-/** Skeleton placeholder for a form field (loading state). */
+/** Skeleton placeholder for a form field (loading state). Uses theme radius: rounded-lg. */
 const FormLoadingField = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("space-y-2", className)} {...props}>
-    <Skeleton className="h-4 w-24 rounded-md" />
+  <div ref={ref} className={cn("flex flex-col gap-2", className)} {...props}>
+    <Skeleton className="h-4 w-24 rounded-lg" />
     <Skeleton className="h-12 w-full rounded-xl" />
   </div>
 ));
@@ -273,6 +279,11 @@ export interface FormEmptyStateProps extends React.HTMLAttributes<HTMLDivElement
   onAction?: () => void;
 }
 
+/**
+ * Empty state card: design tokens only (border-border, rounded-xl).
+ * CTA button: text-primary-foreground on bg-primary for WCAG AA contrast; focus ring-2.
+ * Spacing: design scale (p-6, gap-4, gap-6).
+ */
 const FormEmptyState = React.forwardRef<HTMLDivElement, FormEmptyStateProps>(
   (
     {
@@ -291,23 +302,25 @@ const FormEmptyState = React.forwardRef<HTMLDivElement, FormEmptyStateProps>(
       role="status"
       aria-label={typeof message === "string" ? message : "Empty state"}
       className={cn(
-        "flex flex-col items-center justify-center rounded-xl border border-border bg-muted/30 px-6 py-12 text-center",
+        "flex flex-col items-center justify-center gap-6 rounded-xl border border-border bg-muted/30 px-6 py-12 text-center shadow-sm",
         className
       )}
       {...props}
     >
       {icon && (
-        <span className="mb-4 text-muted-foreground [&>svg]:h-10 [&>svg]:w-10">
+        <span className="text-muted-foreground [&>svg]:h-10 [&>svg]:w-10">
           {icon}
         </span>
       )}
       <p className="text-sm font-medium text-foreground">{message}</p>
-      {children && <div className="mt-2 text-sm text-muted-foreground">{children}</div>}
+      {children && (
+        <div className="text-sm text-muted-foreground">{children}</div>
+      )}
       {actionLabel && onAction && (
         <button
           type="button"
           onClick={onAction}
-          className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2"
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-200 hover:scale-[1.02] hover:opacity-95 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98]"
         >
           {actionLabel}
         </button>
