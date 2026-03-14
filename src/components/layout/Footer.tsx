@@ -18,7 +18,7 @@ export function Footer() {
       aria-label="Site footer"
       className={cn(
         "border-t border-border bg-card",
-        "py-8 md:py-10"
+        "py-6 md:py-8"
       )}
     >
       <div
@@ -31,7 +31,7 @@ export function Footer() {
         {/* Copyright and product description – design tokens for color */}
         <p
           className={cn(
-            "text-sm text-muted-foreground",
+            "text-sm text-foreground",
             "text-center md:text-left",
             "order-1 md:order-1"
           )}
@@ -68,8 +68,10 @@ export function Footer() {
               variant="ghost"
               size="sm"
               className={cn(
+                "rounded-lg",
                 "text-muted-foreground hover:text-foreground hover:bg-primary/10",
                 "h-auto min-h-11 px-3 py-2",
+                "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 "transition-colors duration-200"
               )}
             >
