@@ -38,9 +38,9 @@ const SheetOverlay = React.forwardRef<
 ));
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
-/** Panel uses design tokens: bg-surface-raised, border-border, shadow-card (elevation) */
+/** Panel uses design tokens: bg-surface-raised, border-border, shadow-card (elevation). Spacing: design system scale (gap-6 = 24px). */
 const sheetVariants = cva(
-  "fixed z-50 gap-4 bg-surface-raised border-border p-6 shadow-card transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+  "fixed z-50 gap-6 bg-surface-raised border-border p-6 shadow-card transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
   {
     variants: {
       side: {
@@ -95,7 +95,7 @@ const SheetContent = React.forwardRef<
         >
           {children}
           <SheetPrimitive.Close
-            className="absolute right-4 top-4 rounded-full opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 disabled:pointer-events-none"
+            className="absolute right-4 top-4 rounded-lg opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none"
             aria-label="Close sheet"
           >
             <X className="h-4 w-4" aria-hidden />
@@ -114,7 +114,7 @@ const SheetHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col space-y-2 text-center sm:text-left",
+      "flex flex-col space-y-4 text-center sm:text-left",
       className
     )}
     {...props}
@@ -128,7 +128,7 @@ const SheetFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-4",
       className
     )}
     {...props}
@@ -157,6 +157,7 @@ const SheetTitle = React.forwardRef<
 });
 SheetTitle.displayName = SheetPrimitive.Title.displayName;
 
+/** Description text uses text-secondary (design token) for WCAG AA contrast on light surfaces. */
 const SheetDescription = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description>
@@ -171,7 +172,7 @@ const SheetDescription = React.forwardRef<
     <SheetPrimitive.Description
       ref={ref}
       id={id}
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn("text-sm text-secondary", className)}
       {...props}
     />
   );
