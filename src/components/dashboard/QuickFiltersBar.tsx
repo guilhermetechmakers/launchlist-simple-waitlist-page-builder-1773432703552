@@ -49,8 +49,8 @@ export function QuickFiltersBar({
         placeholder="Search by name or slug…"
         value={searchQuery}
         onChange={(e) => onQueryChange(e.target.value)}
-        className="max-w-sm"
-        aria-label="Search projects"
+        className="max-w-sm border-border bg-input text-foreground"
+        aria-label="Search waitlist projects by name or slug"
       />
       <div className="flex flex-wrap items-center gap-4">
         <label className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -59,7 +59,7 @@ export function QuickFiltersBar({
             value={sortKey}
             onChange={(e) => onSortChange(e.target.value as SortKey)}
             className="h-9 rounded-lg border border-border bg-input px-3 text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
-            aria-label="Sort by"
+            aria-label="Sort waitlist projects by"
           >
             {SORT_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -74,7 +74,7 @@ export function QuickFiltersBar({
             value={visibilityFilter}
             onChange={(e) => onVisibilityChange(e.target.value as VisibilityFilter)}
             className="h-9 rounded-lg border border-border bg-input px-3 text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
-            aria-label="Filter by visibility"
+            aria-label="Filter waitlist projects by visibility"
           >
             {VISIBILITY_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>

@@ -35,15 +35,19 @@ export function ProjectsList({
   const hasError = typeof error === "string" && error.length > 0;
 
   if (isLoading) {
+    const skeletonCount = 6;
     return (
       <Card
-        className="mt-8"
+        className="mt-8 border-border bg-card shadow-card"
         role="status"
-        aria-label="Loading projects"
+        aria-label="Loading waitlist projects"
+        aria-busy="true"
+        aria-live="polite"
       >
         <CardContent className="pt-6">
+          <p className="sr-only">Loading waitlist projects…</p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((i) => (
+            {Array.from({ length: skeletonCount }, (_, i) => (
               <ProjectCardSkeleton key={i} />
             ))}
           </div>
@@ -126,13 +130,19 @@ export function ProjectsList({
 
 function ProjectCardSkeleton() {
   return (
-    <Card>
-      <CardHeader>
-        <Skeleton className="h-6 w-3/4" />
-        <Skeleton className="mt-2 h-4 w-full" />
+    <Card className="border-border bg-card overflow-hidden">
+      <CardHeader className="space-y-2">
+        <Skeleton className="h-5 w-3/4 rounded-md bg-muted" />
+        <Skeleton className="h-4 w-full rounded-md bg-muted" />
+        <Skeleton className="h-3 w-1/2 rounded-md bg-muted" />
       </CardHeader>
-      <CardContent>
-        <Skeleton className="h-10 w-full" />
+      <CardContent className="space-y-3">
+        <Skeleton className="h-8 w-full rounded-lg bg-muted" />
+        <Skeleton className="h-16 w-full rounded-xl bg-muted" />
+        <div className="flex gap-2 pt-1">
+          <Skeleton className="h-9 flex-1 rounded-md bg-muted" />
+          <Skeleton className="h-9 w-24 rounded-md bg-muted" />
+        </div>
       </CardContent>
     </Card>
   );

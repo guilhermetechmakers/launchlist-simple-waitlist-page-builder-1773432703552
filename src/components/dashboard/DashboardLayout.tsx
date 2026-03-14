@@ -25,9 +25,13 @@ export function DashboardLayout({ children, className }: DashboardLayoutProps) {
             <h1 className="font-heading text-3xl font-bold text-foreground">
               Your waitlists
             </h1>
-            <Button asChild className="transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2">
+            <Button
+              asChild
+              className="transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2"
+              aria-label="Create new waitlist"
+            >
               <Link to="/setup">
-                <Plus className="mr-2 h-4 w-4" />
+                <Plus className="mr-2 h-4 w-4" aria-hidden />
                 Create new waitlist
               </Link>
             </Button>

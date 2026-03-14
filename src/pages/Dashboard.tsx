@@ -153,10 +153,10 @@ export default function Dashboard() {
               exportingProjectId={exportingProjectId}
             />
             {totalPages > 1 && (
-              <div
+              <nav
                 className="mt-8 flex items-center justify-center gap-2"
                 role="navigation"
-                aria-label="Pagination"
+                aria-label="Waitlist projects pagination"
               >
                 <Button
                   type="button"
@@ -164,10 +164,15 @@ export default function Dashboard() {
                   size="sm"
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage <= 1}
+                  aria-label="Previous page"
                 >
                   Previous
                 </Button>
-                <span className="text-sm text-muted-foreground">
+                <span
+                  className="text-sm text-muted-foreground"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
                   Page {currentPage} of {totalPages}
                 </span>
                 <Button
@@ -176,10 +181,11 @@ export default function Dashboard() {
                   size="sm"
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage >= totalPages}
+                  aria-label="Next page"
                 >
                   Next
                 </Button>
-              </div>
+              </nav>
             )}
           </>
         );
