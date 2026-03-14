@@ -8,6 +8,19 @@ const DialogTrigger = DialogPrimitive.Trigger;
 const DialogPortal = DialogPrimitive.Portal;
 const DialogClose = DialogPrimitive.Close;
 
+/** Context to wire dialog content aria-labelledby/aria-describedby from title and description ids */
+type DialogAriaContextValue = {
+  titleId: string | null;
+  descriptionId: string | null;
+  setTitleId: (id: string) => void;
+  setDescriptionId: (id: string) => void;
+};
+const DialogAriaContext = React.createContext<DialogAriaContextValue | null>(null);
+
+function useDialogAria() {
+  return React.useContext(DialogAriaContext);
+}
+
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
@@ -28,27 +41,45 @@ const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
     showClose?: boolean;
   }
->(({ className, children, showClose = true, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay />
-    <DialogPrimitive.Content
-      ref={ref}
-      className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-border bg-card p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 rounded-2xl",
-        className
-      )}
-      {...props}
-    >
-      {children}
-      {showClose && (
-        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 disabled:pointer-events-none">
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </DialogPrimitive.Close>
-      )}
-    </DialogPrimitive.Content>
-  </DialogPortal>
-));
+>(({ className, children, showClose = true, ...props }, ref) => {
+  const [titleId, setTitleId] = React.useState<string | null>(null);
+  const [descriptionId, setDescriptionId] = React.useState<string | null>(null);
+  const ariaContextValue = React.useMemo<DialogAriaContextValue>(
+    () => ({
+      titleId,
+      descriptionId,
+      setTitleId,
+      setDescriptionId,
+    }),
+    [titleId, descriptionId]
+  );
+
+  return (
+    <DialogPortal>
+      <DialogOverlay />
+      <DialogAriaContext.Provider value={ariaContextValue}>
+        <DialogPrimitive.Content
+          ref={ref}
+          aria-labelledby={titleId ?? undefined}
+          aria-describedby={descriptionId ?? undefined}
+          className={cn(
+            "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-border bg-surface-raised p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 rounded-2xl",
+            className
+          )}
+          {...props}
+        >
+          {children}
+          {showClose && (
+            <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 disabled:pointer-events-none">
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </DialogPrimitive.Close>
+          )}
+        </DialogPrimitive.Content>
+      </DialogAriaContext.Provider>
+    </DialogPortal>
+  );
+});
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({
@@ -82,25 +113,43 @@ DialogFooter.displayName = "DialogFooter";
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Title
-    ref={ref}
-    className={cn("font-heading text-lg font-semibold", className)}
-    {...props}
-  />
-));
+>(({ className, id: idProp, ...props }, ref) => {
+  const generatedId = React.useId();
+  const id = idProp ?? generatedId;
+  const ariaContext = useDialogAria();
+  React.useEffect(() => {
+    if (ariaContext?.setTitleId) ariaContext.setTitleId(id);
+  }, [id, ariaContext]);
+  return (
+    <DialogPrimitive.Title
+      ref={ref}
+      id={id}
+      className={cn("font-heading text-lg font-semibold", className)}
+      {...props}
+    />
+  );
+});
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Description
-    ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
-    {...props}
-  />
-));
+>(({ className, id: idProp, ...props }, ref) => {
+  const generatedId = React.useId();
+  const id = idProp ?? generatedId;
+  const ariaContext = useDialogAria();
+  React.useEffect(() => {
+    if (ariaContext?.setDescriptionId) ariaContext.setDescriptionId(id);
+  }, [id, ariaContext]);
+  return (
+    <DialogPrimitive.Description
+      ref={ref}
+      id={id}
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props}
+    />
+  );
+});
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 export {

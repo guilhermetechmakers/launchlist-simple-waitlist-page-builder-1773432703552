@@ -29,6 +29,8 @@
     --radius-button: 0.5rem;
     /* Dark hero/surface for preview and landing sections */
     --surface-dark: 31 32 35; /* #1F2023 */
+    /* Elevated surface for dialogs, popovers, overlays (design token) */
+    --surface-raised: 255 255 255; /* #FFFFFF, matches card */
   }
 }
 
