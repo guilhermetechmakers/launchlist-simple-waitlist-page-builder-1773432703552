@@ -202,13 +202,13 @@ export default function WaitlistSetup() {
           aria-busy="true"
           aria-label="Loading waitlist setup"
         >
-          <div className="mx-auto max-w-[1300px]">
+          <div className="mx-auto max-w-7xl">
             <div className="mb-6 flex items-center gap-4">
-              <Skeleton className="h-9 w-28 rounded-md" />
-              <Skeleton className="h-8 w-40 rounded-md" />
+              <Skeleton className="h-9 w-28 rounded-lg" />
+              <Skeleton className="h-8 w-40 rounded-lg" />
             </div>
             <div className="grid gap-8 lg:grid-cols-2">
-              <Card className="shadow-card">
+              <Card className="shadow-md">
                 <CardHeader>
                   <Skeleton className="h-6 w-20 rounded-md" />
                   <Skeleton className="h-4 w-64 rounded-md" />
@@ -216,26 +216,26 @@ export default function WaitlistSetup() {
                 <CardContent className="space-y-6">
                   {[1, 2, 3, 4, 5, 6, 7].map((i) => (
                     <div key={i} className="space-y-2">
-                      <Skeleton className="h-4 w-24 rounded-md" />
-                      <Skeleton className="h-10 w-full rounded-md" />
+                      <Skeleton className="h-4 w-24 rounded-lg" />
+                      <Skeleton className="h-10 w-full rounded-lg" />
                     </div>
                   ))}
                   <div className="flex flex-wrap gap-2 pt-2">
-                    <Skeleton className="h-10 w-32 rounded-md" />
-                    <Skeleton className="h-10 w-24 rounded-md" />
-                    <Skeleton className="h-10 w-20 rounded-md" />
+                    <Skeleton className="h-10 w-32 rounded-lg" />
+                    <Skeleton className="h-10 w-24 rounded-lg" />
+                    <Skeleton className="h-10 w-20 rounded-lg" />
                   </div>
                 </CardContent>
               </Card>
               <div className="space-y-4">
-                <Card className="shadow-card">
+                <Card className="shadow-md">
                   <CardHeader>
-                    <Skeleton className="h-6 w-24 rounded-md" />
-                    <Skeleton className="h-4 w-full max-w-xs rounded-md" />
+                    <Skeleton className="h-6 w-24 rounded-lg" />
+                    <Skeleton className="h-4 w-full max-w-xs rounded-lg" />
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <Skeleton className="h-24 w-full rounded-lg" />
-                    <Skeleton className="h-12 w-full rounded-lg" />
+                    <Skeleton className="h-24 w-full rounded-xl" />
+                    <Skeleton className="h-12 w-full rounded-xl" />
                   </CardContent>
                 </Card>
               </div>
@@ -253,16 +253,16 @@ export default function WaitlistSetup() {
       <div className="flex min-h-screen flex-col bg-background">
         <Navbar />
         <main className="flex-1 px-4 py-8 md:px-6" aria-label="Waitlist setup error">
-          <div className="mx-auto max-w-[1300px]">
+          <div className="mx-auto max-w-7xl">
             <div className="mb-6">
-              <Button variant="ghost" size="sm" asChild>
+              <Button variant="ghost" size="sm" asChild className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                 <Link to="/dashboard" aria-label="Back to dashboard">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Dashboard
                 </Link>
               </Button>
             </div>
-            <Card className="border-destructive/30 shadow-card">
+            <Card className="border-destructive/30 shadow-md rounded-xl">
               <CardContent className="flex flex-col items-center justify-center gap-4 py-12 text-center">
                 <div className="rounded-full bg-destructive/10 p-4">
                   <AlertCircle className="h-10 w-10 text-destructive" aria-hidden />
@@ -271,7 +271,7 @@ export default function WaitlistSetup() {
                   <h2 className="font-heading text-lg font-semibold text-foreground">
                     Could not load waitlist
                   </h2>
-                  <p className="text-sm text-muted-foreground max-w-md">
+                  <p className="text-sm text-gray-600 max-w-md">
                     {errorMessage}
                   </p>
                 </div>
@@ -305,9 +305,9 @@ export default function WaitlistSetup() {
         aria-busy={pending}
         aria-label={isEdit ? "Edit waitlist setup" : "Create new waitlist setup"}
       >
-        <div className="mx-auto max-w-[1300px]">
+        <div className="mx-auto max-w-7xl">
           <div className="mb-6 flex items-center gap-4">
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm" asChild className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
               <Link to="/dashboard" aria-label="Back to dashboard">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Dashboard
@@ -319,10 +319,10 @@ export default function WaitlistSetup() {
           </div>
 
           <div className="grid gap-8 lg:grid-cols-2">
-            <Card className="shadow-card">
+            <Card className="shadow-md rounded-xl">
               <CardHeader>
-                <h2 className="font-heading text-lg font-semibold">Details</h2>
-                <p className="text-sm text-muted-foreground">
+                <h2 className="font-heading text-lg font-semibold text-foreground">Details</h2>
+                <p className="text-sm text-gray-600">
                   Product name, description, and where to receive signups.
                 </p>
               </CardHeader>
@@ -348,7 +348,7 @@ export default function WaitlistSetup() {
                             />
                           </FormControl>
                           <FormMessage />
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-xs text-gray-600">
                             {(field.value ?? "").length}/80
                           </p>
                         </FormItem>
@@ -405,10 +405,10 @@ export default function WaitlistSetup() {
                       control={form.control}
                       name="is_public"
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between rounded-lg border border-border p-4">
+                        <FormItem className="flex flex-row items-center justify-between rounded-xl border border-border p-4">
                           <div>
                             <FormLabel>Public</FormLabel>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-gray-600">
                               Anyone with the link can join the waitlist.
                             </p>
                           </div>
