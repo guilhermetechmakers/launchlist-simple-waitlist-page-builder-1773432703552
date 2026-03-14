@@ -39,11 +39,11 @@ export default function Landing() {
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-hero-subtitle">
                 Create a minimal, conversion-focused landing page to collect emails before launch. No complexity—just headline, description, and signup.
               </p>
-              <div className="mt-10 flex flex-wrap gap-4">
+              <div className="mt-8 flex flex-wrap gap-4">
                 <Button
                   asChild
                   size="lg"
-                  className="bg-primary text-primary-foreground hover:opacity-95 focus-visible:ring-primary/30"
+                  className="bg-primary text-primary-foreground hover:opacity-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-dark"
                   aria-label="Get started free — create your waitlist"
                 >
                   <Link to="/signup">Get started free</Link>
@@ -52,14 +52,14 @@ export default function Landing() {
                   asChild
                   variant="outline"
                   size="lg"
-                  className="border-white/30 text-white hover:bg-white/10 focus-visible:ring-white/30"
+                  className="border-white/30 text-white hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-dark"
                   aria-label="Log in to your account"
                 >
                   <Link to="/login">Log in</Link>
                 </Button>
               </div>
             </div>
-            <div className="flex items-center justify-center rounded-[28px] bg-surface-dark-raised p-8 shadow-xl">
+            <div className="flex items-center justify-center rounded-2xl bg-surface-dark-raised p-8 shadow-lg">
               {!isHeroPreviewReady ? (
                 <div
                   className="w-full max-w-sm space-y-4 rounded-2xl border border-white/10 bg-card p-6"
@@ -83,7 +83,7 @@ export default function Landing() {
                   )}
                 >
                   <p className="font-heading text-lg font-semibold text-foreground">Your Product</p>
-                  <p className="mt-2 text-sm text-muted-foreground">Short description for early adopters.</p>
+                  <p className="mt-2 text-sm text-card-foreground/80">Short description for early adopters.</p>
                   <div className="mt-4 space-y-2">
                     <Label htmlFor="hero-preview-email" className="sr-only">
                       Email address for waitlist signup
@@ -94,16 +94,16 @@ export default function Landing() {
                         type="email"
                         placeholder="you@example.com"
                         readOnly
-                        className="flex-1"
+                        className="flex-1 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2"
                         aria-label="Email address for waitlist signup (preview)"
                         aria-invalid={false}
                       />
-                      <Button size="sm" className="shrink-0" aria-label="Join waitlist">
+                      <Button size="sm" className="shrink-0 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2" aria-label="Join waitlist">
                         Join
                       </Button>
                     </div>
                   </div>
-                  <p className="mt-3 text-xs text-muted-foreground">Join 0 others on the list</p>
+                  <p className="mt-3 text-xs text-card-foreground/80">Join 0 others on the list</p>
                 </div>
               )}
             </div>
@@ -122,7 +122,7 @@ export default function Landing() {
             >
               How it works
             </h2>
-            <p className="mt-4 max-w-2xl text-muted-foreground">
+            <p className="mt-4 max-w-2xl text-foreground/80">
               Three steps to a live waitlist page.
             </p>
             <div className="mt-12 grid gap-8 md:grid-cols-3" role="list">
@@ -149,13 +149,13 @@ export default function Landing() {
                 <div
                   key={step}
                   role="listitem"
-                  className="animate-fade-in-up rounded-2xl border border-border bg-card p-6 shadow-card transition-shadow duration-200 hover:shadow-card-hover"
+                  className="animate-fade-in-up rounded-2xl border border-border bg-card p-6 shadow-md transition-shadow duration-200 hover:shadow-lg"
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-primary" aria-hidden>
                     <Icon className="h-6 w-6" />
                   </div>
                   <p className="mt-4 font-heading text-lg font-semibold text-foreground">{title}</p>
-                  <p className="mt-2 text-sm text-muted-foreground">{description}</p>
+                  <p className="mt-2 text-sm text-foreground/80">{description}</p>
                 </div>
               ))}
             </div>
@@ -174,7 +174,7 @@ export default function Landing() {
             >
               Built for makers
             </h2>
-            <p className="mt-4 max-w-2xl text-muted-foreground">
+            <p className="mt-4 max-w-2xl text-foreground/80">
               Minimal setup. Professional result. No code required.
             </p>
             <ul className="mt-12 grid gap-4 sm:grid-cols-2" role="list">
@@ -186,7 +186,7 @@ export default function Landing() {
                 "CSV export for your list",
                 "Simple dashboard to manage everything",
               ].map((feature, i) => (
-                <li key={i} className="flex items-center gap-3 text-muted-foreground">
+                <li key={i} className="flex items-center gap-3 text-foreground/80">
                   <Zap className="h-5 w-5 shrink-0 text-primary" aria-hidden />
                   <span>{feature}</span>
                 </li>
@@ -206,13 +206,13 @@ export default function Landing() {
             >
               Start collecting signups today
             </h2>
-            <p className="mt-4 text-muted-foreground">
+            <p className="mt-4 text-foreground/80">
               Free to start. Set up in under two minutes.
             </p>
             <Button
               asChild
               size="lg"
-              className="mt-8 focus-visible:ring-primary/30"
+              className="mt-8 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               aria-label="Get started — create your waitlist"
             >
               <Link to="/signup">Get started</Link>
