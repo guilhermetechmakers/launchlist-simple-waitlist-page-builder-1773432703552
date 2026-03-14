@@ -39,19 +39,19 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
       <main className="flex flex-1 items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md animate-fade-in-up rounded-2xl border border-border bg-card shadow-card transition-shadow duration-200 hover:shadow-card-hover">
-          <CardHeader>
-            <CardTitle>Log in</CardTitle>
-            <CardDescription>
+        <Card className="w-full max-w-md animate-fade-in-up rounded-xl border border-border bg-card shadow-md transition-shadow duration-200 hover:shadow-lg">
+          <CardHeader className="space-y-2">
+            <CardTitle className="text-foreground">Log in</CardTitle>
+            <CardDescription className="text-foreground/80">
               Enter your email and password to access your waitlists.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 {signIn.isError && (
                   <div
                     role="alert"
@@ -72,6 +72,7 @@ export default function Login() {
                           type="email"
                           placeholder="you@example.com"
                           aria-label="Email address"
+                          className="min-h-[44px] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                           {...field}
                         />
                       </FormControl>
@@ -90,6 +91,7 @@ export default function Login() {
                           type="password"
                           placeholder="••••••••"
                           aria-label="Password"
+                          className="min-h-[44px] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                           {...field}
                         />
                       </FormControl>
@@ -100,19 +102,27 @@ export default function Login() {
                 <div className="flex items-center justify-between text-sm">
                   <Link
                     to="/forgot-password"
-                    className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 rounded-sm"
+                    className="inline-flex min-h-[44px] min-w-[44px] items-center text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
                   >
                     Forgot password?
                   </Link>
                 </div>
-                <Button type="submit" className="w-full" disabled={signIn.isPending}>
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full min-h-[44px] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  disabled={signIn.isPending}
+                >
                   {signIn.isPending ? "Signing in…" : "Log in"}
                 </Button>
               </form>
             </Form>
-            <p className="mt-6 text-center text-sm text-muted-foreground">
+            <p className="mt-6 text-center text-sm text-foreground/85">
               Don’t have an account?{" "}
-              <Link to="/signup" className="font-medium text-primary hover:underline">
+              <Link
+                to="/signup"
+                className="inline-flex min-h-[44px] items-center font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+              >
                 Sign up
               </Link>
             </p>
